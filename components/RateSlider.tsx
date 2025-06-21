@@ -82,7 +82,7 @@ export default function RateSlider() {
         </p>
       </div>
 
-      <div className="grid md:grid-cols-2 gap-6">
+      <div className="grid md:grid-cols-3 gap-6">
         <Slider label="Input Tokens" value={inputTokens} onChange={(e) => setInputTokens(Number(e.target.value))} max={16000} accentColor="pink" />
         <Slider label="Output Tokens" value={outputTokens} onChange={(e) => setOutputTokens(Number(e.target.value))} max={16000} accentColor="yellow" />
         <ModelSelector value={model} onChange={(e) => setModel(e.target.value as keyof typeof modelPricingINR)} />

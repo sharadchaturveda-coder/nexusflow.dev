@@ -8,7 +8,9 @@ This document describes the component architecture of the project.
 -   **`components/Navbar.tsx`**: The sticky navigation bar component.
 -   **`components/home/*.tsx`**: Each section of the landing page is a separate component, located in the `components/home` directory.
 -   **`components/InfiniteBusinessScroll.tsx`**: A reusable component that creates an infinite, auto-looping marquee of business cards.
--   **`components/RateSlider.tsx`**: A reusable component that allows users to estimate their monthly costs.
+-   **`components/RateSlider.tsx`**: A reusable component that allows users to estimate their monthly costs. This component is further broken down into smaller components for the sliders, model selector, and cost display.
+-   **`components/home/Hero.tsx`**: This component is broken down into smaller components for each zone of the hero section.
+-   **`components/home/Pricing.tsx`**: This component is broken down into a `PricingCard` component.
 
 ## Styling
 

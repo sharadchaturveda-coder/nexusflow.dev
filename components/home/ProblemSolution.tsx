@@ -1,5 +1,22 @@
 import { motion } from 'framer-motion';
 
+function Card({ emoji, title, description, footer }: { emoji: string, title: string, description: string, footer: string }) {
+  return (
+    <motion.div
+      initial={{ opacity: 0, y: 50 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, delay: 0.1 }}
+      whileHover={{ scale: 1.05, y: -5, boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}
+      className="bg-white/60 backdrop-blur-md p-8 rounded-2xl shadow-lg border border-gray-200 flex flex-col items-center text-center"
+    >
+      <div className="text-5xl mb-4">{emoji}</div>
+      <h3 className="text-2xl font-bold mb-2">{title}</h3>
+      <p className="text-gray-600">{description}</p>
+      <p className="mt-4 text-sm font-bold">{footer}</p>
+    </motion.div>
+  );
+}
+
 const cardData = [
   {
     emoji: '🤯',
@@ -40,19 +57,7 @@ export default function ProblemSolution() {
       </div>
       <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
         {cardData.map((card, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, y: 50 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: i * 0.1 }}
-            whileHover={{ scale: 1.05, y: -5 }}
-            className="bg-white/60 backdrop-blur-md p-8 rounded-2xl shadow-lg border border-gray-200 flex flex-col items-center text-center"
-          >
-            <div className="text-5xl mb-4">{card.emoji}</div>
-            <h3 className="text-2xl font-bold mb-2">{card.title}</h3>
-            <p className="text-gray-600">{card.description}</p>
-            <p className="mt-4 text-sm font-bold">{card.footer}</p>
-          </motion.div>
+          <Card key={i} {...card} />
         ))}
       </div>
     </section>

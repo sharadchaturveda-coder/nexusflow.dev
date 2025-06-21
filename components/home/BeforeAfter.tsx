@@ -14,24 +14,24 @@ export default function BeforeAfter() {
       <div className="flex flex-col md:flex-row items-center justify-center gap-8">
         {/* Before */}
         <div className="space-y-4">
-          <motion.div
-            className="bg-red-50 border border-red-200 p-4 rounded-lg shadow-lg"
-            whileHover={{ scale: 1.05 }}
-          >
-            <p>🤯 Missed WhatsApp leads</p>
-          </motion.div>
-          <motion.div
-            className="bg-red-50 border border-red-200 p-4 rounded-lg shadow-lg"
-            whileHover={{ scale: 1.05 }}
-          >
-            <p>😡 No central dashboard</p>
-          </motion.div>
-          <motion.div
-            className="bg-red-50 border border-red-200 p-4 rounded-lg shadow-lg"
-            whileHover={{ scale: 1.05 }}
-          >
-            <p>😫 Manual responses at 2AM</p>
-          </motion.div>
+        <motion.div
+          className="bg-red-50 border border-red-200 p-4 rounded-lg shadow-lg"
+          whileHover={{ scale: 1.05, y: -5, boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}
+        >
+          <p>🤯 Missed WhatsApp leads</p>
+        </motion.div>
+        <motion.div
+          className="bg-red-50 border border-red-200 p-4 rounded-lg shadow-lg"
+          whileHover={{ scale: 1.05, y: -5, boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}
+        >
+          <p>😡 No central dashboard</p>
+        </motion.div>
+        <motion.div
+          className="bg-red-50 border border-red-200 p-4 rounded-lg shadow-lg"
+          whileHover={{ scale: 1.05, y: -5, boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}
+        >
+          <p>😫 Manual responses at 2AM</p>
+        </motion.div>
         </div>
 
         {/* Engine */}
@@ -43,24 +43,24 @@ export default function BeforeAfter() {
 
         {/* After */}
         <div className="space-y-4">
-          <motion.div
-            className="bg-green-50 border border-green-200 p-4 rounded-lg shadow-lg"
-            whileHover={{ scale: 1.05 }}
-          >
-            <p>✅ Unified Inbox</p>
-          </motion.div>
-          <motion.div
-            className="bg-green-50 border border-green-200 p-4 rounded-lg shadow-lg"
-            whileHover={{ scale: 1.05 }}
-          >
-            <p>🤖 AI handles queries</p>
-          </motion.div>
-          <motion.div
-            className="bg-green-50 border border-green-200 p-4 rounded-lg shadow-lg"
-            whileHover={{ scale: 1.05 }}
-          >
-            <p>📈 Insights on autopilot</p>
-          </motion.div>
+        <motion.div
+          className="bg-green-50 border border-green-200 p-4 rounded-lg shadow-lg"
+          whileHover={{ scale: 1.05, y: -5, boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}
+        >
+          <p>✅ Unified Inbox</p>
+        </motion.div>
+        <motion.div
+          className="bg-green-50 border border-green-200 p-4 rounded-lg shadow-lg"
+          whileHover={{ scale: 1.05, y: -5, boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}
+        >
+          <p>🤖 AI handles queries</p>
+        </motion.div>
+        <motion.div
+          className="bg-green-50 border border-green-200 p-4 rounded-lg shadow-lg"
+          whileHover={{ scale: 1.05, y: -5, boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}
+        >
+          <p>📈 Insights on autopilot</p>
+        </motion.div>
         </div>
       </div>
     </section>
