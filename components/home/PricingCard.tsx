@@ -7,6 +7,7 @@ interface Plan {
   yearlyPrice?: string;
   features: string[];
   popular?: boolean;
+  button?: React.ReactNode; // Add button prop
 }
 
 interface PricingCardProps {
@@ -39,9 +40,15 @@ export default function PricingCard({ plan, isYearly, isSelected, onSelect }: Pr
           <li key={i}>{feature}</li>
         ))}
       </ul>
-      <button className={`mt-8 font-bold py-3 px-6 rounded-full transition-all ${isSelected ? 'bg-magenta text-white' : 'bg-gray-200 text-gray-800'}`}>
-        Choose Plan
-      </button>
+      {plan.button ? (
+        <div className="mt-8">
+          {plan.button}
+        </div>
+      ) : (
+        <button className={`mt-8 font-bold py-3 px-6 rounded-full transition-all ${isSelected ? 'bg-magenta text-white' : 'bg-gray-200 text-gray-800'}`}>
+          Choose Plan
+        </button>
+      )}
     </motion.div>
   );
 }

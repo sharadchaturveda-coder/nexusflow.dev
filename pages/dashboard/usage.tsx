@@ -1,34 +1,72 @@
 import React, { useEffect, useState } from 'react';
 import UsageStats from '../../components/UsageStats';
 import PlanBanner from '../../components/PlanBanner';
-import { UsageLog } from '../../lib/usageLogger';
-import { Plan } from '../../lib/planChecker';
+import { useSession } from 'next-auth/react';
+import { supabase } from '../../lib/supabaseClient';
+
+interface UsageLog {
+  id: string;
+  userId: string;
+  tokensUsed: number;
+  cost: number;
+  createdAt: string;
+}
 
 const UsagePage = () => {
+  const { data: session, status } = useSession();
   const [usage, setUsage] = useState<UsageLog[]>([]);
-  const [plan, setPlan] = useState<Plan | null>(null);
+  const [subscription, setSubscription] = useState<any | null>(null); // Use 'any' for now, define a proper interface later if needed
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // In a real app, you'd fetch this data from an API
-    // For now, we'll use mock data.
-    const mockUsage: UsageLog[] = [
-      { userId: 'user1', tokensUsed: 50000, cost: 3, timestamp: new Date().toISOString() },
-      { userId: 'user1', tokensUsed: 75000, cost: 4.5, timestamp: new Date().toISOString() },
-    ];
-    const mockPlan: Plan = { name: 'Pro', token_limit: 200000, price: 500, model: 'gpt-3.5-turbo' };
+    const fetchData = async () => {
+      if (status === 'authenticated' && session?.user?.id) {
+        const userId = session.user.id;
 
-    setUsage(mockUsage);
-    setPlan(mockPlan);
-    setLoading(false);
-  }, []);
+        // Fetch subscription data
+        const { data: subData, error: subError } = await supabase
+          .from('subscriptions')
+          .select('*')
+          .eq('userId', userId)
+          .single();
+
+        if (subError && subError.code !== 'PGRST116') { // PGRST116 means no rows found
+          console.error('Error fetching subscription:', subError);
+          setLoading(false);
+          return;
+        }
+        setSubscription(subData || { plan: 'free', tokensUsed: 0, tokenLimit: 10000 }); // Default free plan
+
+        // Fetch usage logs
+        const { data: usageData, error: usageError } = await supabase
+          .from('usage_logs')
+          .select('*')
+          .eq('userId', userId)
+          .order('createdAt', { ascending: false });
+
+        if (usageError) {
+          console.error('Error fetching usage logs:', usageError);
+          setLoading(false);
+          return;
+        }
+        setUsage(usageData || []);
+      }
+      setLoading(false);
+    };
+
+    fetchData();
+  }, [session, status]);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <div>Loading usage data...</div>;
   }
 
-  if (!plan) {
-    return <div>Plan not found.</div>;
+  if (status === 'unauthenticated') {
+    return <div>Please sign in to view your usage.</div>;
+  }
+
+  if (!subscription) {
+    return <div>No subscription found.</div>;
   }
 
   const totalTokensUsed = usage.reduce((acc, log) => acc + log.tokensUsed, 0);
@@ -37,16 +75,16 @@ const UsagePage = () => {
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Usage Dashboard</h1>
-      <PlanBanner tokensUsed={totalTokensUsed} quota={plan.token_limit} />
+      <PlanBanner tokensUsed={subscription.tokensUsed} quota={subscription.tokenLimit} />
       <div className="mt-4">
-        <UsageStats tokensUsed={totalTokensUsed} cost={totalCost} quota={plan.token_limit} />
+        <UsageStats tokensUsed={subscription.tokensUsed} cost={totalCost} quota={subscription.tokenLimit} />
       </div>
       <div className="mt-8">
         <h2 className="text-xl font-bold">Usage History</h2>
         <ul>
-          {usage.map((log, index) => (
-            <li key={index} className="border-b p-2">
-              {new Date(log.timestamp).toLocaleString()}: {log.tokensUsed} tokens used (₹{log.cost.toFixed(2)})
+          {usage.map((log) => (
+            <li key={log.id} className="border-b p-2">
+              {new Date(log.createdAt).toLocaleString()}: {log.tokensUsed} tokens used (₹{log.cost.toFixed(2)})
             </li>
           ))}
         </ul>

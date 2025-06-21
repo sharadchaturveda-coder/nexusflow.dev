@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import PricingCard from './PricingCard';
+import UpgradeButton from '../UpgradeButton'; // Import the new component
 
 const plans = [
   {
@@ -7,6 +8,7 @@ const plans = [
     name: 'Free Forever',
     price: '₹0',
     features: ['50 replies/mo', '1 Channel', 'GPT-3.5'],
+    button: <UpgradeButton />,
   },
   {
     id: 'startup',

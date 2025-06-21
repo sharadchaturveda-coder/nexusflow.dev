@@ -2,11 +2,13 @@ import { motion } from 'framer-motion';
 import { Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { Fragment, useState, useEffect } from 'react';
+import { useSession, signIn, signOut } from 'next-auth/react';
 
 const sections = ['features', 'dashboard', 'pricing', 'faq']; // Keep for scroll spy on home page
 
 export default function Navbar() {
   const [activeSection, setActiveSection] = useState('features');
+  const { data: session } = useSession();
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -52,9 +54,13 @@ export default function Navbar() {
               )}
             </a>
           ))}
-          <a href="#get-started" className="px-4 py-2 bg-gradient-to-tr from-pink-500 to-yellow-400 text-white rounded-xl shadow-lg hover:scale-105 transition-all">
-            Get Started
-          </a>
+          <div>
+            {session ? (
+              <button onClick={() => signOut()} className="px-4 py-2 bg-gradient-to-tr from-pink-500 to-yellow-400 text-white rounded-xl shadow-lg hover:scale-105 transition-all">Sign Out</button>
+            ) : (
+              <button onClick={() => signIn('google')} className="px-4 py-2 bg-gradient-to-tr from-pink-500 to-yellow-400 text-white rounded-xl shadow-lg hover:scale-105 transition-all">Sign In</button>
+            )}
+          </div>
         </div>
         <div className="md:hidden">
           <Menu as="div" className="relative inline-block text-left">
@@ -101,6 +107,29 @@ export default function Navbar() {
                       >
                         Get Started
                       </a>
+                    )}
+                  </Menu.Item>
+                  <Menu.Item>
+                    {({ active }) => (
+                      session ? (
+                        <button
+                          onClick={() => signOut()}
+                          className={`${
+                            active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        >
+                          Sign Out
+                        </button>
+                      ) : (
+                        <button
+                          onClick={() => signIn('google')}
+                          className={`${
+                            active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                          } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                        >
+                          Sign In
+                        </button>
+                      )
                     )}
                   </Menu.Item>
                 </div>

@@ -1,23 +1,46 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { withQuotaCheck } from '../../middleware/withQuotaCheck';
 import { getGPTResponse } from '../../lib/gptClient';
 import { calculateCost } from '../../lib/tokenCostCalculator';
-import { logUsage, getUserUsage } from '../../lib/usageLogger';
-import { getUserMemory, updateUserMemory, Message } from '../../lib/memoryManager';
+import { logUsage } from '../../lib/usageLogger';
+import { getUserMemory, updateUserMemory } from '../../lib/memoryManager';
 import { getBotPersona } from '../../lib/botPersona';
-import { Plan, User } from '../../lib/planChecker';
+import { supabase } from '../../lib/supabaseClient';
+import { getToken } from 'next-auth/jwt';
+import { Message } from '../../types/chat'; // Import Message from new location
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { userId, message } = req.body;
-  const plan = (req as any).plan as Plan;
-  const user = (req as any).user as User;
+  const { message } = req.body;
 
-  if (!userId || !message) {
-    return res.status(400).json({ error: 'userId and message are required' });
+  // Perform quota check directly in the API route
+  const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET! });
+
+  if (!token || !token.sub) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  const userId = token.sub;
+
+  const { data: subscription, error: subError } = await supabase
+      .from('subscriptions')
+      .select('tokensUsed, tokenLimit')
+      .eq('userId', userId)
+      .single();
+
+  if (subError || !subscription) {
+    return res.status(403).json({ error: 'Subscription not found or error fetching subscription.' });
+  }
+
+  if (subscription.tokensUsed >= subscription.tokenLimit) {
+    return res.status(429).json({ error: 'Token limit exceeded.' });
+  }
+  // End quota check
+
+  if (!message) {
+    return res.status(400).json({ error: 'message is required' });
   }
 
   try {
@@ -29,32 +52,24 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
         { role: 'user', content: message }
     ];
 
-    const gptResponse = await getGPTResponse(messages, plan.model, botPersona);
+    const gptResponse = await getGPTResponse(messages, 'gpt-3.5-turbo', botPersona); // Use a default model or derive from subscription
 
     const userMessage: Message = { role: 'user', content: message };
     const assistantMessage: Message = { role: 'assistant', content: gptResponse || '' };
 
-    await updateUserMemory(userId, userMessage);
-    await updateUserMemory(userId, assistantMessage);
+    // Update memory with both messages
+    const newHistory = [...userMemory, userMessage, assistantMessage];
+    await updateUserMemory(userId, newHistory);
 
     const tokensUsed = (gptResponse || '').length;
-    const cost = calculateCost(tokensUsed, plan.model);
+    const cost = calculateCost(tokensUsed, 'gpt-3.5-turbo'); // Use a default model or derive from subscription
 
-    await logUsage({
-      userId,
-      tokensUsed,
-      cost,
-      timestamp: new Date().toISOString(),
-    });
-
-    const totalUsage = await getUserUsage(userId);
-    const quotaRemaining = ((plan.token_limit - totalUsage) / plan.token_limit) * 100;
+    await logUsage(userId, tokensUsed, cost);
 
     res.status(200).json({
       message: gptResponse,
       tokensUsed,
       costIncurred: cost,
-      quotaRemaining: `${quotaRemaining.toFixed(2)}%`,
       status: 'OK',
     });
   } catch (error) {
@@ -63,4 +78,4 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 }
 
-export default withQuotaCheck(handler);
+export default handler;

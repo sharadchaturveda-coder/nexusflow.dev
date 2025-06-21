@@ -1,49 +1,34 @@
-import type { NextApiRequest, NextApiResponse, NextApiHandler } from 'next';
-import { getPlanByUserId, getUser } from '../lib/planChecker';
-import { getUserUsage } from '../lib/usageLogger';
-import { logTransaction } from '../lib/transactionManager';
-import { calculateCost } from '../lib/tokenCostCalculator';
+// middleware/withQuotaCheck.ts (New version)
+import { getToken } from 'next-auth/jwt';
+import { NextRequest, NextResponse } from 'next/server';
+import { supabase } from '../lib/supabaseClient'; // Adjust path if needed
 
-export function withQuotaCheck(handler: NextApiHandler) {
-  return async (req: NextApiRequest, res: NextApiResponse) => {
-    const { userId } = req.body;
+export function withQuotaCheck(handler: (req: NextRequest, res: NextResponse) => Promise<NextResponse | Response>) {
+  return async (req: NextRequest, res: NextResponse) => {
+    const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET! });
 
-    if (!userId) {
-      return res.status(400).json({ error: 'userId is required' });
+    if (!token) {
+      return new Response('Unauthorized', { status: 401 });
     }
 
-    const user = await getUser(userId);
-    if (user?.locked) {
-        return res.status(403).json({ error: 'User account is locked' });
+    const userId = token.sub; // `sub` is the standard JWT field for user ID
+
+    const { data: subscription, error } = await supabase
+        .from('subscriptions')
+        .select('tokensUsed, tokenLimit')
+        .eq('userId', userId)
+        .single();
+
+    if (error || !subscription) {
+      return new Response('Subscription not found.', { status: 403 });
     }
 
-    const plan = await getPlanByUserId(userId);
-    if (!plan) {
-      return res.status(403).json({ error: 'User does not have a valid plan' });
+    if (subscription.tokensUsed >= subscription.tokenLimit) {
+      return new Response('Token limit exceeded.', { status: 429 });
     }
 
-    const currentUsage = await getUserUsage(userId);
-    const hardLimit = plan.token_limit * 1.1; // 10% hard overage limit
-
-    if (currentUsage > hardLimit) {
-        await logTransaction({
-            userId,
-            amount: calculateCost(currentUsage - plan.token_limit, plan.model),
-            description: `Hard overage limit exceeded`,
-            timestamp: new Date().toISOString(),
-            type: 'overage_penalty'
-        });
-        return res.status(429).json({ error: 'Quota exceeded. Please upgrade your plan.' });
-    }
-    
-    if (currentUsage > plan.token_limit) {
-        res.setHeader('X-Warning', 'You are using overage tokens. Additional charges may apply.');
-    }
-
-    // Inject plan and user info into the request object
-    (req as any).plan = plan;
-    (req as any).user = user;
-
+    // Attach user info to the request for the next handler
+    (req as any).user = { id: userId, subscription };
     return handler(req, res);
   };
 }

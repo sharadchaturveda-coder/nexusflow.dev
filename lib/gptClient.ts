@@ -1,5 +1,5 @@
 import OpenAI from 'openai';
-import { Message } from './memoryManager';
+import { Message } from '../types/chat';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
