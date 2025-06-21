@@ -3,7 +3,7 @@ import { Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { Fragment, useState, useEffect } from 'react';
 
-const sections = ['features', 'dashboard', 'pricing', 'faq'];
+const sections = ['features', 'dashboard', 'pricing', 'faq']; // Keep for scroll spy on home page
 
 export default function Navbar() {
   const [activeSection, setActiveSection] = useState('features');
@@ -52,6 +52,13 @@ export default function Navbar() {
               )}
             </a>
           ))}
+          {/* Direct link to Dashboard page */}
+          <a
+            href="/dashboard"
+            className="relative text-gray-700 hover:text-pink-600 transition-all"
+          >
+            Dashboard
+          </a>
           <a href="#get-started" className="px-4 py-2 bg-gradient-to-tr from-pink-500 to-yellow-400 text-white rounded-xl shadow-lg hover:scale-105 transition-all">
             Get Started
           </a>
@@ -91,6 +98,19 @@ export default function Navbar() {
                       )}
                     </Menu.Item>
                   ))}
+                  {/* Direct link to Dashboard page in mobile menu */}
+                  <Menu.Item>
+                    {({ active }) => (
+                      <a
+                        href="/dashboard"
+                        className={`${
+                          active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                      >
+                        Dashboard
+                      </a>
+                    )}
+                  </Menu.Item>
                   <Menu.Item>
                     {({ active }) => (
                       <a

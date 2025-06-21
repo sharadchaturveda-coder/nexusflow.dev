@@ -20,3 +20,20 @@ This document describes the component architecture of the project.
 ## Data Flow
 
 -   **`lib/costCalculator.ts`**: This module contains the logic for calculating the estimated cost of using the service. It is used by the `RateSlider` component.
+
+### Dashboard Backend Integration
+
+The dashboard components (`components/dashboard/*.tsx`) are designed to be data-agnostic and easily integrate with various backend APIs. Currently, they utilize dummy data for demonstration purposes.
+
+Each component is structured to accept data via props, allowing for a clear separation of concerns between the UI and data fetching logic. When connecting to a live backend, the dummy data should be replaced with actual API calls.
+
+For example:
+-   **Hero Metric Cards**: Will fetch aggregated metrics (total messages, tokens consumed, API cost, active conversations) from a `/api/dashboard/metrics` endpoint.
+-   **Usage Chart**: Will fetch daily usage data (tokens, messages, API cost) from a `/api/dashboard/usage` endpoint, with parameters for date ranges or metric types.
+-   **Active Users / Bots Panel**: Will retrieve a list of active bots and their details from a `/api/dashboard/bots` endpoint.
+-   **Quota Overview**: Will fetch current plan details, tokens used, and maximum quota from a `/api/user/quota` or similar endpoint.
+-   **Recent Activity Feed**: Will consume a real-time stream or periodically poll a `/api/dashboard/activity` endpoint for recent events.
+-   **System Status Widgets**: Will make calls to various internal or external endpoints (e.g., `/api/status/openai`, `/api/status/webhooks`) to check service health and latency.
+-   **Experimental / AI Feedback Section**: Will fetch data related to personality usage and GPT model distribution from dedicated AI analytics endpoints (e.g., `/api/ai/feedback`).
+
+The `pages/dashboard/index.tsx` orchestrates the data fetching and passes the relevant data down to its child components.

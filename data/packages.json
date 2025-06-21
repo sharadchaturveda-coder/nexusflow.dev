@@ -1,17 +1,14 @@
 [
   {
-    "name": "Free",
+    "name": "basic",
     "token_limit": 10000,
-    "price": 0
+    "price": 10,
+    "model": "gpt-3.5-turbo"
   },
   {
-    "name": "Pro",
-    "token_limit": 200000,
-    "price": 500
-  },
-  {
-    "name": "Business",
-    "token_limit": 1000000,
-    "price": 2000
+    "name": "premium",
+    "token_limit": 50000,
+    "price": 50,
+    "model": "gpt-4o-mini"
   }
 ]

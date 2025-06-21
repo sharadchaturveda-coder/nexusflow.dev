@@ -1,0 +1,120 @@
+.container {
+  min-height: 100vh;
+  padding: 0 0.5rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: var(--tw-colors-opal-white); /* Opal white from Tailwind config */
+  color: #333;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Sleek sans-serif */
+}
+
+.main {
+  padding: 5rem 0;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 100%;
+  max-width: 1200px;
+}
+
+.title {
+  margin: 0;
+  line-height: 1.15;
+  font-size: 4rem;
+  text-align: center;
+  color: #333;
+}
+
+.description {
+  line-height: 1.5;
+  font-size: 1.5rem;
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+.heroMetrics,
+.usageChart,
+.activeBots,
+.quotaOverview,
+.recentActivity,
+.systemStatus,
+.aiFeedback {
+  width: 100%;
+  margin-bottom: 3rem;
+  padding: 2rem;
+  border-radius: 10px;
+  background-color: #fff;
+  box-shadow: var(--tw-shadow-soft-lg); /* Use new softer shadow */
+}
+
+.heroMetrics h2,
+.usageChart h2,
+.activeBots h2,
+.quotaOverview h2,
+.recentActivity h2,
+.systemStatus h2,
+.aiFeedback h2 {
+  font-size: 2rem;
+  margin-bottom: 1.5rem;
+  color: #555;
+  border-bottom: 1px solid #eee;
+  padding-bottom: 1rem;
+}
+
+/* Hero Metric Card Glow Effect */
+.hero-metric-card {
+  position: relative;
+  background-color: #fff;
+  border-radius: 10px;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.hero-metric-card-glow {
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: var(--tw-gradient-gold-gradient); /* Use new gold gradient */
+  z-index: -1;
+  filter: blur(8px); /* Shimmering glow effect */
+  border-radius: 12px; /* Slightly larger to cover card corners */
+  animation: border-glow 2s infinite alternate; /* Apply new animation */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .title {
+    font-size: 2.5rem;
+  }
+
+  .description {
+    font-size: 1.2rem;
+  }
+
+  .heroMetrics,
+  .usageChart,
+  .activeBots,
+  .quotaOverview,
+  .recentActivity,
+  .systemStatus,
+  .aiFeedback {
+    padding: 1rem;
+    margin-bottom: 2rem;
+  }
+
+  .heroMetrics h2,
+  .usageChart h2,
+  .activeBots h2,
+  .quotaOverview h2,
+  .recentActivity h2,
+  .systemStatus h2,
+  .aiFeedback h2 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+  }
+}

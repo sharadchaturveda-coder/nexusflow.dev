@@ -3,22 +3,31 @@ import path from 'path';
 
 const usageLogPath = path.resolve(process.cwd(), 'data/usage.json');
 
-export interface UsageLog {
+interface UsageLog {
   userId: string;
   tokensUsed: number;
   cost: number;
   timestamp: string;
 }
 
-export async function logUsage(log: UsageLog) {
-  let usageData: UsageLog[] = [];
+async function getUsageLogs(): Promise<UsageLog[]> {
   try {
     const fileContent = await fs.readFile(usageLogPath, 'utf-8');
-    usageData = JSON.parse(fileContent);
+    return JSON.parse(fileContent);
   } catch (error) {
-    // File might not exist yet, which is fine.
+    return [];
   }
+}
 
-  usageData.push(log);
-  await fs.writeFile(usageLogPath, JSON.stringify(usageData, null, 2));
+export async function logUsage(log: UsageLog): Promise<void> {
+  const logs = await getUsageLogs();
+  logs.push(log);
+  await fs.writeFile(usageLogPath, JSON.stringify(logs, null, 2), 'utf-8');
+}
+
+export async function getUserUsage(userId: string): Promise<number> {
+    const logs = await getUsageLogs();
+    return logs
+        .filter(log => log.userId === userId)
+        .reduce((total, log) => total + log.tokensUsed, 0);
 }

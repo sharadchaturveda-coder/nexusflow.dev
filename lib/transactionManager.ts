@@ -1,24 +1,27 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-const transactionsPath = path.resolve(process.cwd(), 'data/transactions.json');
+const transactionsFilePath = path.resolve(process.cwd(), 'data/transactions.json');
 
-export interface Transaction {
+interface Transaction {
   userId: string;
   amount: number;
   description: string;
   timestamp: string;
+  type?: 'overage_penalty' | 'invoice';
 }
 
-export async function logTransaction(transaction: Transaction) {
-  let transactions: Transaction[] = [];
+async function getTransactions(): Promise<Transaction[]> {
   try {
-    const fileContent = await fs.readFile(transactionsPath, 'utf-8');
-    transactions = JSON.parse(fileContent);
+    const fileContent = await fs.readFile(transactionsFilePath, 'utf-8');
+    return JSON.parse(fileContent);
   } catch (error) {
-    // File might not exist yet, which is fine.
+    return [];
   }
+}
 
+export async function logTransaction(transaction: Transaction): Promise<void> {
+  const transactions = await getTransactions();
   transactions.push(transaction);
-  await fs.writeFile(transactionsPath, JSON.stringify(transactions, null, 2));
+  await fs.writeFile(transactionsFilePath, JSON.stringify(transactions, null, 2), 'utf-8');
 }

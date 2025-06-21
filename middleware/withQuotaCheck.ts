@@ -1,39 +1,49 @@
-import { NextApiRequest, NextApiResponse, NextApiHandler } from 'next';
-import { getPlan } from '../lib/planChecker';
-import { UsageLog } from '../lib/usageLogger';
-import fs from 'fs/promises';
-import path from 'path';
+import type { NextApiRequest, NextApiResponse, NextApiHandler } from 'next';
+import { getPlanByUserId, getUser } from '../lib/planChecker';
+import { getUserUsage } from '../lib/usageLogger';
+import { logTransaction } from '../lib/transactionManager';
+import { calculateCost } from '../lib/tokenCostCalculator';
 
-const usageLogPath = path.resolve(process.cwd(), 'data/usage.json');
+export function withQuotaCheck(handler: NextApiHandler) {
+  return async (req: NextApiRequest, res: NextApiResponse) => {
+    const { userId } = req.body;
 
-export const withQuotaCheck = (handler: NextApiHandler) => async (req: NextApiRequest, res: NextApiResponse) => {
-  const { userId, planName } = req.body;
+    if (!userId) {
+      return res.status(400).json({ error: 'userId is required' });
+    }
 
-  if (!userId || !planName) {
-    return res.status(400).json({ error: 'userId and planName are required' });
-  }
+    const user = await getUser(userId);
+    if (user?.locked) {
+        return res.status(403).json({ error: 'User account is locked' });
+    }
 
-  const plan = await getPlan(planName);
+    const plan = await getPlanByUserId(userId);
+    if (!plan) {
+      return res.status(403).json({ error: 'User does not have a valid plan' });
+    }
 
-  if (!plan) {
-    return res.status(404).json({ error: 'Plan not found' });
-  }
+    const currentUsage = await getUserUsage(userId);
+    const hardLimit = plan.token_limit * 1.1; // 10% hard overage limit
 
-  let usageData: UsageLog[] = [];
-  try {
-    const fileContent = await fs.readFile(usageLogPath, 'utf-8');
-    usageData = JSON.parse(fileContent);
-  } catch (error) {
-    // File might not exist yet, which is fine.
-  }
+    if (currentUsage > hardLimit) {
+        await logTransaction({
+            userId,
+            amount: calculateCost(currentUsage - plan.token_limit, plan.model),
+            description: `Hard overage limit exceeded`,
+            timestamp: new Date().toISOString(),
+            type: 'overage_penalty'
+        });
+        return res.status(429).json({ error: 'Quota exceeded. Please upgrade your plan.' });
+    }
+    
+    if (currentUsage > plan.token_limit) {
+        res.setHeader('X-Warning', 'You are using overage tokens. Additional charges may apply.');
+    }
 
-  const userUsage = usageData
-    .filter(log => log.userId === userId)
-    .reduce((total, log) => total + log.tokensUsed, 0);
+    // Inject plan and user info into the request object
+    (req as any).plan = plan;
+    (req as any).user = user;
 
-  if (userUsage >= plan.token_limit) {
-    return res.status(429).json({ error: 'Monthly quota exceeded' });
-  }
-
-  return handler(req, res);
-};
+    return handler(req, res);
+  };
+}
