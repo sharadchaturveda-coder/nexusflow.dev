@@ -16,7 +16,7 @@ const UsagePage = () => {
       { userId: 'user1', tokensUsed: 50000, cost: 3, timestamp: new Date().toISOString() },
       { userId: 'user1', tokensUsed: 75000, cost: 4.5, timestamp: new Date().toISOString() },
     ];
-    const mockPlan: Plan = { name: 'Pro', token_limit: 200000, price: 500 };
+    const mockPlan: Plan = { name: 'Pro', token_limit: 200000, price: 500, model: 'gpt-3.5-turbo' };
 
     setUsage(mockUsage);
     setPlan(mockPlan);

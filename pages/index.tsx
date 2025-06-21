@@ -21,9 +21,6 @@ const Home: NextPage = () => {
         <title>Nexus Flow AI - Turn Your DMs Into Deals. Automatically.</title>
         <meta name="description" content="One AI agent to answer WhatsApp, Insta, and Facebook." />
         <link rel="icon" href="/favicon.ico" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
       </Head>
 
       <Navbar />

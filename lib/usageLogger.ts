@@ -3,7 +3,7 @@ import path from 'path';
 
 const usageLogPath = path.resolve(process.cwd(), 'data/usage.json');
 
-interface UsageLog {
+export interface UsageLog {
   userId: string;
   tokensUsed: number;
   cost: number;
