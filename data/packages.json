@@ -1,0 +1,17 @@
+[
+  {
+    "name": "Free",
+    "token_limit": 10000,
+    "price": 0
+  },
+  {
+    "name": "Pro",
+    "token_limit": 200000,
+    "price": 500
+  },
+  {
+    "name": "Business",
+    "token_limit": 1000000,
+    "price": 2000
+  }
+]
