@@ -1,38 +1,7 @@
 import { useState } from 'react';
 import PricingCard from './PricingCard';
-import UpgradeButton from '../UpgradeButton'; // Import the new component
-
-const plans = [
-  {
-    id: 'free',
-    name: 'Free Forever',
-    price: '₹0',
-    features: ['50 replies/mo', '1 Channel', 'GPT-3.5'],
-    button: <UpgradeButton />,
-  },
-  {
-    id: 'startup',
-    name: 'Startup',
-    price: '₹4,999',
-    yearlyPrice: '₹53,988',
-    features: ['10,000 Tokens/mo', '3 Channels', 'GPT-4'],
-  },
-  {
-    id: 'growth',
-    name: 'Growth',
-    price: '₹9,999',
-    yearlyPrice: '₹107,988',
-    features: ['50,000 Tokens/mo', 'Unlimited Channels', 'GPT-4 Turbo', 'Priority Support'],
-    popular: true,
-  },
-  {
-    id: 'pro',
-    name: 'Pro',
-    price: '₹19,999',
-    yearlyPrice: '₹215,988',
-    features: ['200,000 Tokens/mo', 'Unlimited Channels', 'GPT-4 Turbo', 'Dedicated Support'],
-  },
-];
+import UpgradeButton from '../UpgradeButton';
+import { plans } from '@/lib/pricing/planData';
 
 export default function Pricing() {
   const [isYearly, setIsYearly] = useState(false);
@@ -64,7 +33,10 @@ export default function Pricing() {
         {plans.map((plan) => (
           <PricingCard
             key={plan.id}
-            plan={plan}
+            plan={{
+              ...plan,
+              button: plan.id === 'free' ? <UpgradeButton /> : null,
+            }}
             isYearly={isYearly}
             isSelected={selectedPlan === plan.id}
             onSelect={handleSelect}
