@@ -1,5 +1,4 @@
 import React from 'react';
-import styles from '../../styles/Dashboard.module.css';
 import UsageChart from './UsageChart';
 import ActiveBotsPanel from './ActiveBotsPanel';
 import QuotaOverview from './QuotaOverview';
@@ -7,70 +6,20 @@ import RecentActivityFeed from './RecentActivityFeed';
 import ExperimentalAI from './ExperimentalAI';
 import HeroMetricsSection from './HeroMetricsSection';
 import SystemStatusSection from './SystemStatusSection';
-
-interface MetricData {
-  totalMessagesThisMonth: number;
-  tokensConsumed: number;
-  estimatedApiCost: number;
-  conversationsActive: number;
-  deltaMessages: string;
-  deltaTokens: string;
-  deltaApiCost: string;
-  deltaConversations: string;
-}
-
-interface UsageChartData {
-  name: string;
-  tokens: number;
-  messages: number;
-  apiCost: number;
-}
-
-interface BotData {
-  id: string;
-  name: string;
-  personality: string;
-  lastUsed: string;
-  totalUsage: string;
-}
-
-interface QuotaData {
-  currentPlan: string;
-  tokensUsed: number;
-  tokensMax: number;
-  softOverageZone: number;
-}
-
-interface ActivityData {
-  id: string;
-  type: 'message' | 'bot' | 'cost';
-  description: string;
-  timestamp: string;
-}
-
-interface SystemStatusData {
-  service: string;
-  status: 'operational' | 'degraded' | 'outage';
-  message: string;
-  lastChecked: string;
-}
-
-interface ExperimentalAIData {
-  personalityMessages: { personality: string; messages: number }[];
-  gptModelUsage: { name: string; value: number }[];
-  insights: string[];
-}
+import { DashboardLayout, DashboardSection } from './DashboardLayout';
+import { HeroMetrics, UsageChartData, UsageLog, Subscription, SystemStatus } from '@/types/dashboard';
 
 interface DashboardContentProps {
-  metrics: MetricData | null;
+  metrics: HeroMetrics | null;
   usageData: UsageChartData[];
-  bots: BotData[];
-  quota: QuotaData | null;
-  activities: ActivityData[];
-  openaiStatus: SystemStatusData | null;
-  webhookStatus: SystemStatusData | null;
-  aiFeedback: ExperimentalAIData | null;
+  bots: any[];
+  quota: Subscription | null;
+  activities: UsageLog[];
+  openaiStatus: SystemStatus | null;
+  webhookStatus: SystemStatus | null;
+  aiFeedback: any;
   handleFlushMemory: () => void;
+  refreshDashboardData: () => void;
 }
 
 const DashboardContent: React.FC<DashboardContentProps> = ({
@@ -83,59 +32,47 @@ const DashboardContent: React.FC<DashboardContentProps> = ({
   webhookStatus,
   aiFeedback,
   handleFlushMemory,
+  refreshDashboardData,
 }) => {
   return (
-    <main className={styles.main}>
-      <h1 className={styles.title}>
-        Nexus Flow AI Dashboard
-      </h1>
-
-      <p className={styles.description}>
-        Your control nexus.
-      </p>
-
+    <DashboardLayout>
       <HeroMetricsSection metrics={metrics} />
 
-      <section className={`${styles.usageChart} shadow-soft-lg`}>
-        <h2>Usage Chart</h2>
-        {usageData.length > 0 ? <UsageChart data={usageData} /> : <p className="text-gray-500">No usage data available.</p>}
-      </section>
+      <DashboardSection title="Usage Chart" delay={0.1} className="usageChart">
+        {usageData && usageData.length > 0 ? <UsageChart data={usageData} /> : <p className="text-gray-500 text-center py-10">No usage data available.</p>}
+      </DashboardSection>
 
-      <section className={`${styles.activeBots} shadow-soft-lg`}>
-        <h2>Active Users / Bots</h2>
-        {bots.length > 0 ? <ActiveBotsPanel bots={bots} /> : <p className="text-gray-500">No active bots found. Configure your first bot to see data here!</p>}
-      </section>
+      <DashboardSection title="My Bots" delay={0.2} className="activeBots">
+        {bots && bots.length > 0 ? <ActiveBotsPanel bots={bots} /> : <p className="text-gray-500 text-center py-10">No active bots found. Configure your first bot to see data here!</p>}
+      </DashboardSection>
 
-      <section className={`${styles.quotaOverview} shadow-soft-lg`}>
-        <h2>Quota Overview</h2>
+      <DashboardSection title="Quota Overview" delay={0.3} className="quotaOverview">
         {quota ? (
           <QuotaOverview
-            currentPlan={quota.currentPlan}
-            tokensUsed={quota.tokensUsed}
-            tokensMax={quota.tokensMax}
-            softOverageZone={quota.softOverageZone}
+            quota={quota}
+            refreshDashboardData={refreshDashboardData}
           />
         ) : (
-          <p className="text-gray-500">No quota information available.</p>
+          <p className="text-gray-500 text-center py-10">No quota information available.</p>
         )}
-      </section>
+      </DashboardSection>
 
-      <section className={`${styles.recentActivity} shadow-soft-lg`}>
-        <h2>Recent Activity</h2>
-        {activities.length > 0 ? <RecentActivityFeed activities={activities} /> : <p className="text-gray-500">No recent activity to display.</p>}
-      </section>
+      <DashboardSection title="Recent Activity" delay={0.4} className="recentActivity">
+        {activities && activities.length > 0 ? <RecentActivityFeed activities={activities} /> : <p className="text-gray-500 text-center py-10">No recent activity to display.</p>}
+      </DashboardSection>
 
-      <SystemStatusSection
-        openaiStatus={openaiStatus}
-        webhookStatus={webhookStatus}
-        handleFlushMemory={handleFlushMemory}
-      />
+      <DashboardSection title="System Status" delay={0.5} className="systemStatus">
+        <SystemStatusSection
+          openaiStatus={openaiStatus}
+          webhookStatus={webhookStatus}
+          handleFlushMemory={handleFlushMemory}
+        />
+      </DashboardSection>
 
-      <section className={`${styles.aiFeedback} shadow-soft-lg`}>
-        <h2>Experimental / AI Feedback</h2>
-        {aiFeedback ? <ExperimentalAI data={aiFeedback} /> : <p className="text-gray-500">No AI feedback data available.</p>}
-      </section>
-    </main>
+      <DashboardSection title="Experimental / AI Feedback" delay={0.6} className="aiFeedback">
+        {aiFeedback ? <ExperimentalAI data={aiFeedback} /> : <p className="text-gray-500 text-center py-10">No AI feedback data available.</p>}
+      </DashboardSection>
+    </DashboardLayout>
   );
 };
 

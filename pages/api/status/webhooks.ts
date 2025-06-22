@@ -1,20 +1,14 @@
-import type { NextApiRequest, NextApiResponse } from 'next';
-import { withRateLimit } from '../middleware/rateLimiter';
+import { NextApiRequest, NextApiResponse } from 'next';
 
-async function handler(req: NextApiRequest, res: NextApiResponse) {
-  if (req.method === 'GET') {
-    // Dummy status for Webhook Health
-    const status = {
-      service: 'Webhook Health',
-      status: 'degraded', // or 'operational', 'outage'
-      message: 'Error: Endpoint unreachable',
-      lastChecked: new Date().toISOString(),
-    };
-    res.status(200).json(status);
-  } else {
-    res.setHeader('Allow', ['GET']);
-    res.status(405).end(`Method ${req.method} Not Allowed`);
+export default async function handler(req: NextApiRequest, res: NextApiResponse) {
+  if (req.method !== 'GET') {
+    return res.status(405).json({ error: 'Method Not Allowed' });
   }
-}
 
-export default withRateLimit(handler);
+  // Since there's no external webhook configured yet, return a placeholder status
+  res.status(200).json({
+    status: 'pending',
+    message: 'Webhook not configured',
+    latency: 0, // No actual latency to measure
+  });
+}

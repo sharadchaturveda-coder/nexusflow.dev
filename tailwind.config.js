@@ -30,6 +30,7 @@ module.exports = {
         'gold-gradient': 'linear-gradient(45deg, var(--tw-colors-gold-DEFAULT), var(--tw-colors-gold-accent))',
         'candy-gradient': 'linear-gradient(to right, #E10098, #FF5722, #FFD700)',
         'orange-fade': 'linear-gradient(to bottom, #FFEEEA, #FFFDF9)',
+        'orange-gradient': 'linear-gradient(to right, var(--tw-colors-orange), var(--tw-colors-gold-accent))', /* Added orange-gradient */
         'purple-gradient': 'linear-gradient(to right, var(--tw-colors-purple-dark), var(--tw-colors-purple-light))',
       },
       animation: {

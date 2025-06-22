@@ -1,127 +1,51 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
+import useSWR from 'swr';
+import { DashboardData, HeroMetrics, UsageChartData, UsageLog, Subscription, SystemStatus } from '@/types/dashboard';
+import { useSystemStatus } from './useSystemStatus';
 
-interface MetricData {
-  totalMessagesThisMonth: number;
-  tokensConsumed: number;
-  estimatedApiCost: number;
-  conversationsActive: number;
-  deltaMessages: string;
-  deltaTokens: string;
-  deltaApiCost: string;
-  deltaConversations: string;
-}
-
-interface UsageChartData {
-  name: string;
-  tokens: number;
-  messages: number;
-  apiCost: number;
-}
-
-interface BotData {
-  id: string;
-  name: string;
-  personality: string;
-  lastUsed: string;
-  totalUsage: string;
-}
-
-interface QuotaData {
-  currentPlan: string;
-  tokensUsed: number;
-  tokensMax: number;
-  softOverageZone: number;
-}
-
-interface ActivityData {
-  id: string;
-  type: 'message' | 'bot' | 'cost';
-  description: string;
-  timestamp: string;
-}
-
-interface SystemStatusData {
-  service: string;
-  status: 'operational' | 'degraded' | 'outage';
-  message: string;
-  lastChecked: string;
-}
-
-interface ExperimentalAIData {
-  personalityMessages: { personality: string; messages: number }[];
-  gptModelUsage: { name: string; value: number }[];
-  insights: string[];
-}
-
-interface DashboardData {
-  metrics: MetricData | null;
+// Define the structure for the data returned by the useDashboardData hook
+interface UseDashboardDataResult {
+  metrics: HeroMetrics | null;
   usageData: UsageChartData[];
-  bots: BotData[];
-  quota: QuotaData | null;
-  activities: ActivityData[];
-  openaiStatus: SystemStatusData | null;
-  webhookStatus: SystemStatusData | null;
-  aiFeedback: ExperimentalAIData | null;
+  bots: any[]; // Will be populated with placeholder or adapted data
+  quota: Subscription | null;
+  activities: UsageLog[];
+  openaiStatus: SystemStatus | null;
+  webhookStatus: SystemStatus | null;
+  aiFeedback: any; // Will be populated with placeholder or adapted data
   loading: boolean;
   error: string | null;
+  refreshData: () => void; // Add a refresh function
 }
 
-export const useDashboardData = (): DashboardData => {
-  const [metrics, setMetrics] = useState<MetricData | null>(null);
-  const [usageData, setUsageData] = useState<UsageChartData[]>([]);
-  const [bots, setBots] = useState<BotData[]>([]);
-  const [quota, setQuota] = useState<QuotaData | null>(null);
-  const [activities, setActivities] = useState<ActivityData[]>([]);
-  const [openaiStatus, setOpenaiStatus] = useState<SystemStatusData | null>(null);
-  const [webhookStatus, setWebhookStatus] = useState<SystemStatusData | null>(null);
-  const [aiFeedback, setAiFeedback] = useState<ExperimentalAIData | null>(null);
+const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+export const useDashboardData = (): UseDashboardDataResult => {
+  const { data, error, isLoading, mutate } = useSWR<DashboardData>('/api/dashboard/all-data', fetcher);
+  const { openaiStatus, webhookStatus, loadingStatus, statusError, refreshSystemStatus } = useSystemStatus();
+
+  const refreshData = useCallback(() => {
+    mutate(); // Re-fetch data from /api/dashboard/all-data
+    refreshSystemStatus(); // Re-fetch status data
+  }, [mutate, refreshSystemStatus]);
 
   useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      setError(null);
-      try {
-        const [
-          metricsRes,
-          usageRes,
-          botsRes,
-          quotaRes,
-          activitiesRes,
-          openaiStatusRes,
-          webhookStatusRes,
-          aiFeedbackRes,
-        ] = await Promise.all([
-          fetch('/api/dashboard/metrics'),
-          fetch('/api/dashboard/usage'),
-          fetch('/api/dashboard/bots'),
-          fetch('/api/user/quota'),
-          fetch('/api/dashboard/activity'),
-          fetch('/api/status/openai'),
-          fetch('/api/status/webhooks'),
-          fetch('/api/ai/feedback'),
-        ]);
+    refreshData(); // Initial fetch
+  }, [refreshData]);
 
-        setMetrics(await metricsRes.json());
-        setUsageData(await usageRes.json());
-        setBots(await botsRes.json());
-        setQuota(await quotaRes.json());
-        setActivities(await activitiesRes.json());
-        setOpenaiStatus(await openaiStatusRes.json());
-        setWebhookStatus(await webhookStatusRes.json());
-        setAiFeedback(await aiFeedbackRes.json());
-      } catch (err) {
-        console.error('Error fetching dashboard data:', err);
-        setError('Failed to load dashboard data. Please try again later.');
-      } finally {
-        setLoading(false);
-      }
-    };
+  // Map the fetched data to the existing state structure
+  const metrics: HeroMetrics | null = data?.heroMetrics || null;
+  const usageData: UsageChartData[] = data?.usageChartData || [];
+  const quota: Subscription | null = data?.subscription || null;
+  const activities: UsageLog[] = data?.recentActivity || [];
 
-    fetchData();
-  }, []);
+  // Placeholder for bots and AI Feedback as they are not part of all-data endpoint yet
+  const bots: any[] = [{ id: 'default-bot', name: 'SalesBot', personality: 'Helpful AI Assistant', lastUsed: 'Just now', totalUsage: '100 messages' }];
+  const aiFeedback: any = {
+    personalityMessages: [{ personality: 'SalesBot', messages: 100 }],
+    gptModelUsage: [{ name: 'gpt-4o-mini', value: 100 }],
+    insights: ['SalesBot is highly utilized.'],
+  };
 
   return {
     metrics,
@@ -132,7 +56,8 @@ export const useDashboardData = (): DashboardData => {
     openaiStatus,
     webhookStatus,
     aiFeedback,
-    loading,
-    error,
+    loading: isLoading || loadingStatus,
+    error: error ? error.message : statusError,
+    refreshData,
   };
 };

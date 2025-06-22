@@ -1,32 +1,35 @@
-import NextAuth from 'next-auth';
-import { SupabaseAdapter } from '@next-auth/supabase-adapter';
-import GoogleProvider from 'next-auth/providers/google'; // Example provider
+// pages/api/auth/[...nextauth].ts
 
+// Import from 'next-auth', NOT '@auth/core'
+import NextAuth from "next-auth";
+import GoogleProvider from "next-auth/providers/google";
+import PgAdapter from "@auth/pg-adapter"; // Corrected import
+import { Pool } from "pg";
+
+// Create a new connection pool to the database
+const pool = new Pool({
+  connectionString: process.env.DATABASE_URL,
+});
+
+// Define your authentication options in a constant
 export const authOptions = {
+  adapter: PgAdapter(pool),
   providers: [
     GoogleProvider({
-      clientId: process.env.GOOGLE_CLIENT_ID!, // Add these to your .env.local
+      clientId: process.env.GOOGLE_CLIENT_ID!,
       clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
     }),
-    // Add other providers like Email, GitHub etc. if needed
   ],
-  adapter: SupabaseAdapter({
-    url: process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    secret: process.env.SUPABASE_SERVICE_ROLE_KEY!,
-  }),
+  // Add this secret property
+  secret: process.env.NEXTAUTH_SECRET,
   callbacks: {
-    async session({ session, user }: { session: any, user: any }) {
-      // Add the user's ID to the session object
-      if (session.user) {
-        session.user.id = user.id;
-      }
+    // Ensure the user's ID is attached to the session
+    session({ session, user }: { session: any, user: any }) {
+      session.user.id = user.id;
       return session;
     },
   },
-  // Add custom pages if you want to style them
-  // pages: {
-  //   signIn: '/auth/signin',
-  // },
 };
 
+// The default export is the NextAuth handler, which correctly handles req and res
 export default NextAuth(authOptions);

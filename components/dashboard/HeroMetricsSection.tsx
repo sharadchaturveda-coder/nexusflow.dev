@@ -2,20 +2,10 @@ import React from 'react';
 import HeroMetricCard from './HeroMetricCard';
 import { FaEnvelope, FaCoins, FaDollarSign, FaUsers } from 'react-icons/fa';
 import styles from '../../styles/Dashboard.module.css';
-
-interface MetricData {
-  totalMessagesThisMonth: number;
-  tokensConsumed: number;
-  estimatedApiCost: number;
-  conversationsActive: number;
-  deltaMessages: string;
-  deltaTokens: string;
-  deltaApiCost: string;
-  deltaConversations: string;
-}
+import { HeroMetrics } from '@/types/dashboard'; // Import HeroMetrics
 
 interface HeroMetricsSectionProps {
-  metrics: MetricData | null;
+  metrics: HeroMetrics | null;
 }
 
 const HeroMetricsSection: React.FC<HeroMetricsSectionProps> = ({ metrics }) => {
@@ -24,28 +14,28 @@ const HeroMetricsSection: React.FC<HeroMetricsSectionProps> = ({ metrics }) => {
       {metrics ? (
         <>
           <HeroMetricCard
-            title="Total Messages This Month"
-            value={metrics.totalMessagesThisMonth.toLocaleString()}
+            title="Total Messages"
+            value={metrics.totalMessages?.toLocaleString() || 'N/A'}
             icon={<FaEnvelope />}
-            delta={metrics.deltaMessages}
+            // delta prop removed as it's not in new HeroMetrics
           />
           <HeroMetricCard
             title="Tokens Consumed"
-            value={`${(metrics.tokensConsumed / 1000000).toFixed(1)}M`}
+            value={metrics.tokensConsumed ? `${(metrics.tokensConsumed / 1000000).toFixed(1)}M` : 'N/A'}
             icon={<FaCoins />}
-            delta={metrics.deltaTokens}
+            // delta prop removed
           />
           <HeroMetricCard
             title="Estimated API Cost"
-            value={`$${metrics.estimatedApiCost.toFixed(2)}`}
+            value={metrics.totalApiCost ? `$${metrics.totalApiCost.toFixed(2)}` : 'N/A'}
             icon={<FaDollarSign />}
-            delta={metrics.deltaApiCost}
+            // delta prop removed
           />
           <HeroMetricCard
             title="Conversations Active"
-            value={metrics.conversationsActive.toLocaleString()}
+            value={metrics.conversationsActive?.toLocaleString() || 'N/A'}
             icon={<FaUsers />}
-            delta={metrics.deltaConversations}
+            // delta prop removed
           />
         </>
       ) : (

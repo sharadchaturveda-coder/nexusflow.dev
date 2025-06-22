@@ -1,15 +1,4 @@
-import fs from 'fs/promises';
-import path from 'path';
-
-const COMPANY_DATA_DIR = path.resolve(process.cwd(), 'data/company_data');
-
-async function ensureCompanyDataDirExists() {
-  try {
-    await fs.mkdir(COMPANY_DATA_DIR, { recursive: true });
-  } catch (error) {
-    console.error('Error creating company data directory:', error);
-  }
-}
+import { ensureCompanyDataDirExists, writeCompanyDocument, clearCompanyDataDirectory } from './companyDataStorage';
 
 ensureCompanyDataDirExists();
 
@@ -26,8 +15,7 @@ export interface CompanyDocument {
  * before storing it in a vector database.
  */
 export async function ingestCompanyData(document: CompanyDocument): Promise<void> {
-  const filePath = path.join(COMPANY_DATA_DIR, `${document.id}.json`);
-  await fs.writeFile(filePath, JSON.stringify(document, null, 2), 'utf-8');
+  await writeCompanyDocument(document.id, JSON.stringify(document, null, 2));
   console.log(`Company document "${document.name}" ingested.`);
 }
 
@@ -51,11 +39,6 @@ export async function retrieveCompanyContext(query: string): Promise<string[]> {
  * Placeholder function to clear all company data.
  */
 export async function clearAllCompanyData(): Promise<void> {
-  try {
-    await fs.rm(COMPANY_DATA_DIR, { recursive: true, force: true });
-    await ensureCompanyDataDirExists(); // Recreate empty directory
-    console.log('All company data cleared.');
-  } catch (error) {
-    console.error('Error clearing company data:', error);
-  }
+  await clearCompanyDataDirectory();
+  console.log('All company data cleared.');
 }

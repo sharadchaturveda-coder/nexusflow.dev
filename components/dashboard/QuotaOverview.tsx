@@ -1,67 +1,76 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { Subscription } from '@/types/dashboard';
+import QuotaProgressBar from './quota/QuotaProgressBar';
+import QuotaUpgradePrompt from './quota/QuotaUpgradePrompt';
+import QuotaDangerMessage from './quota/QuotaDangerMessage';
 
 interface QuotaOverviewProps {
-  currentPlan: string;
-  tokensUsed: number;
-  tokensMax: number;
-  softOverageZone: number; // Percentage of max tokens where soft overage begins
+  quota: Subscription | null;
+  refreshDashboardData: () => void;
 }
 
 const QuotaOverview: React.FC<QuotaOverviewProps> = ({
-  currentPlan,
-  tokensUsed,
-  tokensMax,
-  softOverageZone,
+  quota,
+  refreshDashboardData,
 }) => {
-  const usagePercentage = (tokensUsed / tokensMax) * 100;
-  const isSoftOverage = usagePercentage >= softOverageZone;
-  const isQuotaDanger = usagePercentage >= 90; // Example: danger if 90% or more
+  const [isUpgrading, setIsUpgrading] = useState(false);
 
-  const getGradientColor = (percentage: number) => {
-    if (percentage >= 90) return 'to-red-500';
-    if (percentage >= softOverageZone) return 'to-orange-500';
-    return 'to-green-500';
+  if (!quota) {
+    return <p className="text-gray-500">No quota information available.</p>;
+  }
+
+  const { plan, tokens_used = 0, token_limit = 0 } = quota; // Provide default values for safety
+  const softOverageZone = token_limit * 0.9;
+  const isQuotaDanger = token_limit > 0 && (tokens_used / token_limit) * 100 >= 90; // Add check for token_limit > 0
+
+  const handleUpgrade = async () => {
+    setIsUpgrading(true);
+    try {
+      const response = await fetch('/api/admin/grant-pro-access', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      });
+
+      if (response.ok) {
+        alert('Successfully upgraded to Pro Plan!');
+        refreshDashboardData();
+      } else {
+        const errorData = await response.json();
+        alert(`Failed to upgrade: ${errorData.error || response.statusText}`);
+      }
+    } catch (error: any) {
+      alert(`An error occurred during upgrade: ${error.message}`);
+    } finally {
+      setIsUpgrading(false);
+    }
   };
 
   return (
-    <div className="w-full p-6 bg-white rounded-xl shadow-lg">
+    <div className="w-full p-6 bg-white rounded-xl shadow-soft-lg">
       <div className="flex justify-between items-center mb-4">
-        <h3 className="text-xl font-semibold text-gray-800">Current Plan: {currentPlan}</h3>
-        <span className="text-lg font-medium text-gray-600">
-          {tokensUsed.toLocaleString()} / {tokensMax.toLocaleString()} Tokens Used
+        <h3 className="text-xl font-semibold text-gray-800">Current Plan: {plan === 'free' ? 'Free Plan' : 'Pro Plan'}</h3>
+        <span className="text-lg font-medium text-gray-700">
+          {tokens_used?.toLocaleString() || 'N/A'} / {token_limit?.toLocaleString() || 'N/A'} Tokens Used
         </span>
       </div>
 
-      <div className="w-full bg-gray-200 rounded-full h-4 relative overflow-hidden">
-        <motion.div
-          className={`h-full rounded-full bg-gradient-to-r from-green-400 ${getGradientColor(usagePercentage)} ${isSoftOverage ? 'shadow-lg shadow-orange-300' : ''}`}
-          initial={{ width: 0 }}
-          animate={{ width: `${usagePercentage}%` }}
-          transition={{ duration: 1, ease: "easeOut" }}
-        ></motion.div>
-        {isSoftOverage && (
-          <div
-            className="absolute top-0 h-full bg-orange-300 opacity-20"
-            style={{ left: `${softOverageZone}%`, width: `${100 - softOverageZone}%` }}
-          ></div>
-        )}
-      </div>
+      <QuotaProgressBar
+        tokensUsed={tokens_used}
+        tokenLimit={token_limit}
+        softOverageZone={softOverageZone}
+      />
 
-      {isQuotaDanger && (
-        <motion.div
-          className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded-md flex justify-between items-center"
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
-        >
-          <p className="font-medium">
-            You are nearing your quota limit. Consider upgrading your plan!
-          </p>
-          <button className="ml-4 bg-gradient-to-r from-gold-500 to-orange-500 text-white font-bold py-2 px-4 rounded-md shadow-md hover:scale-105 transition-all">
-            Upgrade Plan
-          </button>
-        </motion.div>
+      {plan === 'free' && (
+        <QuotaUpgradePrompt
+          handleUpgrade={handleUpgrade}
+          isUpgrading={isUpgrading}
+        />
+      )}
+
+      {plan === 'pro' && isQuotaDanger && (
+        <QuotaDangerMessage />
       )}
     </div>
   );

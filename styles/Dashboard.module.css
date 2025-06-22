@@ -5,13 +5,11 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  background-color: var(--tw-colors-opal-white); /* Opal white from Tailwind config */
-  color: #333;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; /* Sleek sans-serif */
+  /* Rely on globals.css for background and text color */
 }
 
 .main {
-  padding: 5rem 0;
+  padding: 4rem 0; /* Adjusted padding for consistency with landing page */
   flex: 1;
   display: flex;
   flex-direction: column;
@@ -25,7 +23,7 @@
   line-height: 1.15;
   font-size: 4rem;
   text-align: center;
-  color: #333;
+  color: var(--tw-colors-gray-800); /* Use Tailwind gray for consistency */
 }
 
 .description {
@@ -42,8 +40,8 @@
 .recentActivity,
 .systemStatus,
 .aiFeedback {
-  width: 100%;
-  margin-bottom: 3rem;
+  /* These styles are now largely handled by Tailwind classes in DashboardContent.tsx */
+  /* Keeping padding, border-radius, background-color, and box-shadow for consistency */
   padding: 2rem;
   border-radius: 10px;
   background-color: #fff;
@@ -59,7 +57,7 @@
 .aiFeedback h2 {
   font-size: 2rem;
   margin-bottom: 1.5rem;
-  color: #555;
+  color: var(--tw-colors-gray-700); /* Use Tailwind gray for consistency */
   border-bottom: 1px solid #eee;
   padding-bottom: 1rem;
 }
@@ -87,6 +85,8 @@
 }
 
 /* Responsive adjustments */
+/* Responsive adjustments are now primarily handled by Tailwind CSS grid classes in DashboardContent.tsx */
+/* Keeping specific responsive adjustments for elements not directly managed by grid */
 @media (max-width: 768px) {
   .title {
     font-size: 2.5rem;
@@ -94,17 +94,6 @@
 
   .description {
     font-size: 1.2rem;
-  }
-
-  .heroMetrics,
-  .usageChart,
-  .activeBots,
-  .quotaOverview,
-  .recentActivity,
-  .systemStatus,
-  .aiFeedback {
-    padding: 1rem;
-    margin-bottom: 2rem;
   }
 
   .heroMetrics h2,

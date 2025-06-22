@@ -2,17 +2,11 @@ import React from 'react';
 import SystemStatusWidget from './SystemStatusWidget';
 import FlushMemoryButton from './FlushMemoryButton';
 import styles from '../../styles/Dashboard.module.css';
-
-interface SystemStatusData {
-  service: string;
-  status: 'operational' | 'degraded' | 'outage';
-  message: string;
-  lastChecked: string;
-}
+import { SystemStatus } from '@/types/dashboard'; // Import SystemStatus type
 
 interface SystemStatusSectionProps {
-  openaiStatus: SystemStatusData | null;
-  webhookStatus: SystemStatusData | null;
+  openaiStatus: SystemStatus | null;
+  webhookStatus: SystemStatus | null;
   handleFlushMemory: () => void;
 }
 
@@ -21,13 +15,22 @@ const SystemStatusSection: React.FC<SystemStatusSectionProps> = ({
   webhookStatus,
   handleFlushMemory,
 }) => {
+  const mapStatusToWidgetStatus = (status: SystemStatus['status']) => {
+    switch (status) {
+      case 'ok': return 'success';
+      case 'error': return 'failure';
+      case 'pending': return 'loading'; // Map pending to loading for now
+      default: return 'loading';
+    }
+  };
+
   return (
     <section className={`${styles.systemStatus} grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 shadow-soft-lg`}>
       {openaiStatus ? (
         <SystemStatusWidget
           title="Ping OpenAI"
-          status={openaiStatus.status === 'operational' ? 'success' : openaiStatus.status === 'degraded' ? 'loading' : 'failure'}
-          message={openaiStatus.message}
+          status={mapStatusToWidgetStatus(openaiStatus.status)}
+          message={openaiStatus.message || `${openaiStatus.latency}ms`} // Show latency if available
         />
       ) : (
         <p className="text-gray-500">Loading OpenAI status...</p>
@@ -35,7 +38,7 @@ const SystemStatusSection: React.FC<SystemStatusSectionProps> = ({
       {webhookStatus ? (
         <SystemStatusWidget
           title="Webhook Health"
-          status={webhookStatus.status === 'operational' ? 'success' : webhookStatus.status === 'degraded' ? 'loading' : 'failure'}
+          status={mapStatusToWidgetStatus(webhookStatus.status)}
           message={webhookStatus.message}
         />
       ) : (
@@ -43,7 +46,7 @@ const SystemStatusSection: React.FC<SystemStatusSectionProps> = ({
       )}
       <SystemStatusWidget
         title="Message Relay Latency"
-        status="loading" // This would typically be dynamic
+        status="loading" // This would typically be dynamic, keeping as loading for now
         message="Checking..."
       />
       <FlushMemoryButton onClick={handleFlushMemory} />

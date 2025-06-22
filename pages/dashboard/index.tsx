@@ -1,44 +1,40 @@
 import React from 'react';
 import Head from 'next/head';
+import { GetServerSideProps } from 'next';
+import Navbar from '../../components/Navbar';
 import styles from '../../styles/Dashboard.module.css';
 import DashboardContent from '../../components/dashboard/DashboardContent';
 import { useDashboardData } from '../../lib/hooks/useDashboardData';
+import { fetchDashboardData } from '../../lib/dashboardDataFetcher';
 
-const DashboardPage: React.FC = () => {
-  const {
-    metrics,
-    usageData,
-    bots,
-    quota,
-    activities,
-    openaiStatus,
-    webhookStatus,
-    aiFeedback,
-    loading,
-    error,
-  } = useDashboardData();
+interface DashboardPageProps {
+  metrics: any;
+  usageData: any;
+  bots: any;
+  quota: any;
+  activities: any;
+  openaiStatus: any;
+  webhookStatus: any;
+  aiFeedback: any;
+  error?: string;
+}
+
+const DashboardPage: React.FC<DashboardPageProps> = ({
+  metrics,
+  usageData,
+  bots,
+  quota,
+  activities,
+  openaiStatus,
+  webhookStatus,
+  aiFeedback,
+  error,
+}) => {
+  const { refreshData } = useDashboardData();
 
   const handleFlushMemory = () => {
     alert('Flushing system memory...');
-    // In a real application, this would trigger an API call
   };
-
-  if (loading) {
-    return (
-      <div className={styles.container}>
-        <Head>
-          <title>Nexus Flow AI - Dashboard</title>
-          <meta name="description" content="Nexus Flow AI Dashboard" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-        <main className={styles.main}>
-          <h1 className={styles.title}>Loading Dashboard...</h1>
-          <p className={styles.description}>Please wait while we fetch your data.</p>
-          {/* You could add a global spinner here */}
-        </main>
-      </div>
-    );
-  }
 
   if (error) {
     return (
@@ -57,7 +53,7 @@ const DashboardPage: React.FC = () => {
   }
 
   return (
-    <div className={styles.container}>
+    <div className={`${styles.container} font-sans`}>
       <Head>
         <title>Nexus Flow AI - Dashboard</title>
         <meta name="description" content="Nexus Flow AI Dashboard" />
@@ -65,7 +61,7 @@ const DashboardPage: React.FC = () => {
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </Head>
-
+      <Navbar />
       <DashboardContent
         metrics={metrics}
         usageData={usageData}
@@ -76,9 +72,14 @@ const DashboardPage: React.FC = () => {
         webhookStatus={webhookStatus}
         aiFeedback={aiFeedback}
         handleFlushMemory={handleFlushMemory}
+        refreshDashboardData={refreshData}
       />
     </div>
   );
+};
+
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  return fetchDashboardData(context);
 };
 
 export default DashboardPage;

@@ -1,4 +1,5 @@
 import React from 'react';
+import { motion } from 'framer-motion';
 import { FaCheckCircle, FaTimesCircle, FaSpinner } from 'react-icons/fa';
 
 interface SystemStatusWidgetProps {
@@ -20,13 +21,18 @@ const SystemStatusWidget: React.FC<SystemStatusWidgetProps> = ({
     switch (status) {
       case 'success': return <FaCheckCircle className="text-green-500 text-2xl" />;
       case 'failure': return <FaTimesCircle className="text-red-500 text-2xl" />;
-      case 'loading': return <FaSpinner className="text-blue-500 text-2xl animate-spin" />;
+      case 'loading': return <FaSpinner className="text-purple-dark text-2xl animate-spin" />; {/* Changed to purple-dark */}
       default: return null;
     }
   };
 
   return (
-    <div className="flex items-center justify-between p-4 bg-white rounded-lg shadow-md">
+    <motion.div
+      className="flex items-center justify-between p-4 bg-white rounded-lg shadow-soft-lg"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.3 }}
+    >
       <div className="flex items-center space-x-3">
         {statusIcon()}
         <div>
@@ -37,12 +43,12 @@ const SystemStatusWidget: React.FC<SystemStatusWidgetProps> = ({
       {onAction && actionLabel && (
         <button
           onClick={onAction}
-          className="bg-gold-500 hover:bg-gold-600 text-white font-bold py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent"
+          className="bg-gold-gradient text-white font-bold py-2 px-4 rounded-md shadow-md transition duration-300 ease-in-out transform hover:scale-105 focus:outline-none focus:ring-2 focus:ring-gold-500 focus:border-transparent"
         >
           {actionLabel}
         </button>
       )}
-    </div>
+    </motion.div>
   );
 };
 

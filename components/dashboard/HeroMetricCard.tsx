@@ -5,13 +5,12 @@ interface HeroMetricCardProps {
   title: string;
   value: string;
   icon: React.ReactNode;
-  delta?: string;
 }
 
-const HeroMetricCard: React.FC<HeroMetricCardProps> = ({ title, value, icon, delta }) => {
+const HeroMetricCard: React.FC<HeroMetricCardProps> = ({ title, value, icon }) => {
   return (
     <motion.div
-      className="relative p-6 bg-white rounded-xl shadow-lg overflow-hidden hero-metric-card"
+      className="relative p-6 bg-white rounded-xl shadow-soft-lg overflow-hidden hero-metric-card transform transition-transform duration-300 hover:scale-105 hover:shadow-glow-gold" /* Updated shadow and added hover effects */
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, amount: 0.3 }}
@@ -21,14 +20,9 @@ const HeroMetricCard: React.FC<HeroMetricCardProps> = ({ title, value, icon, del
       
       <div className="flex items-center justify-between mb-4">
         <div className="text-4xl font-bold text-gray-800">{value}</div>
-        <div className="text-gray-500 text-3xl">{icon}</div>
+        <div className="text-gray-600 text-3xl">{icon}</div> {/* Changed icon color to gray-600 for consistency */}
       </div>
-      <div className="text-lg text-gray-600 mb-2">{title}</div>
-      {delta && (
-        <div className="text-sm text-gray-500">
-          {delta}
-        </div>
-      )}
+      <div className="text-lg text-gray-700 mb-2">{title}</div> {/* Changed title color to gray-700 */}
     </motion.div>
   );
 };
