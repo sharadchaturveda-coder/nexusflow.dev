@@ -1,19 +1,19 @@
 import React from 'react';
 
 interface UsageStatsProps {
-  tokensUsed: number;
+  tokens_used: number;
   cost: number;
   quota: number;
 }
 
-const UsageStats: React.FC<UsageStatsProps> = ({ tokensUsed, cost, quota }) => {
-  const quotaPercentage = (tokensUsed / quota) * 100;
+const UsageStats: React.FC<UsageStatsProps> = ({ tokens_used, cost, quota }) => {
+  const quotaPercentage = (tokens_used / quota) * 100;
 
   return (
     <div className="p-4 border rounded-lg">
       <h2 className="text-xl font-bold">Usage Stats</h2>
       <div className="mt-4">
-        <p>Tokens Used: {tokensUsed}</p>
+        <p>Tokens Used: {tokens_used}</p>
         <p>Cost: ₹{cost.toFixed(2)}</p>
       </div>
       <div className="mt-4">

@@ -2,13 +2,13 @@ import React from 'react';
 
 interface SubscriptionCardProps {
   plan: string;
-  tokensUsed: number;
-  tokenLimit: number;
+  tokens_used: number;
+  token_limit: number;
   onActivateProTrial: () => void;
 }
 
-const SubscriptionCard: React.FC<SubscriptionCardProps> = ({ plan, tokensUsed, tokenLimit, onActivateProTrial }) => {
-  const percentageUsed = (tokensUsed / tokenLimit) * 100;
+const SubscriptionCard: React.FC<SubscriptionCardProps> = ({ plan, tokens_used, token_limit, onActivateProTrial }) => {
+  const percentageUsed = (tokens_used / token_limit) * 100;
 
   return (
     <div className="bg-white shadow overflow-hidden sm:rounded-lg mb-6">
@@ -42,7 +42,7 @@ const SubscriptionCard: React.FC<SubscriptionCardProps> = ({ plan, tokensUsed, t
                 ></div>
               </div>
               <p className="mt-2 text-xs text-gray-500">
-                {tokensUsed} / {tokenLimit} Tokens Used
+                {tokens_used} / {token_limit} Tokens Used
               </p>
             </dd>
           </div>

@@ -1,98 +1,96 @@
+// lib/dashboard/dataFetchers.ts
+
 import { supabase } from '@/lib/supabaseClient';
 import { Subscription, UsageLog, UsageChartData, RawUsageChartData } from '@/types/dashboard';
 import { getPlanByUserId } from '@/lib/planChecker';
 
-export async function fetchSubscriptionData(userId: string): Promise<Pick<Subscription, 'plan' | 'user_id'> | null> {
-  let subscriptionData: Pick<Subscription, 'plan' | 'user_id'> | null = null;
-  const { data, error: subscriptionError } = await supabase
+export async function fetchSubscriptionData(userId: string): Promise<Subscription> {
+  const { data, error } = await supabase
     .from('subscriptions')
-    .select('plan, user_id')
-    .eq('user_id', userId)
+    .select('plan, "tokenLimit"')
+    .eq('"userId"', userId) // Changed user_id to "user_id"
     .single();
 
-  if (subscriptionError && subscriptionError.code !== 'PGRST116') {
-    throw subscriptionError;
+  if (error && error.code !== 'PGRST116') {
+    console.error('Error fetching subscription data:', error);
+    // If no subscription found, default to free plan with 0 tokens used and default limit
+    return { plan: 'free', tokensUsed: 0, tokenLimit: 0, userId };
   }
 
-  if (data) {
-    subscriptionData = {
-      plan: data.plan as Subscription['plan'],
-      user_id: data.user_id,
-    };
-  } else {
-    subscriptionData = { plan: 'free', user_id: userId };
-  }
-  return subscriptionData;
+  const tokenLimit = data?.tokenLimit || 0;
+
+  return {
+    plan: data?.plan || 'free',
+    tokensUsed: 0, // This will be populated by fetchTotalTokensUsed
+    tokenLimit: tokenLimit,
+    userId: userId,
+  };
 }
 
 export async function fetchTotalTokensUsed(userId: string): Promise<number> {
-  const { data: totalTokensUsedData, error: totalTokensUsedError } = await supabase
+  const { data, error } = await supabase
     .from('usage_logs')
-    .select('tokens_used')
-    .eq('user_id', userId);
+    .select('"tokensUsed"')
+    .eq('userId', userId);
 
-  if (totalTokensUsedError) throw totalTokensUsedError;
-  return totalTokensUsedData ? totalTokensUsedData.reduce((sum: number, log: { tokens_used: number }) => sum + log.tokens_used, 0) : 0;
+  if (error) throw error;
+  return data ? data.reduce((sum, log) => sum + log.tokensUsed, 0) : 0;
 }
 
-export async function fetchTokenLimit(userId: string): Promise<number> {
-  const userPlan = await getPlanByUserId(userId);
-  return userPlan?.token_limit || 0;
-}
 
 export async function fetchTotalMessages(userId: string): Promise<number> {
-  const { count: totalMessages, error: messagesError } = await supabase
+  const { count, error } = await supabase
     .from('conversations')
     .select('*', { count: 'exact', head: true })
-    .eq('user_id', userId);
+    .eq('userId', userId);
 
-  if (messagesError) throw messagesError;
-  return totalMessages || 0;
+  if (error) throw error;
+  return count || 0;
 }
 
 export async function fetchTotalApiCost(userId: string): Promise<number> {
-  const { data: totalApiCostData, error: apiCostError } = await supabase
+  const { data, error } = await supabase
     .from('usage_logs')
     .select('cost')
-    .eq('user_id', userId);
+    .eq('userId', userId);
 
-  if (apiCostError) throw apiCostError;
-  return totalApiCostData ? totalApiCostData.reduce((sum: number, log: { cost: number }) => sum + log.cost, 0) : 0;
+  if (error) throw error;
+  return data ? data.reduce((sum, log) => sum + log.cost, 0) : 0;
 }
 
 export async function fetchUsageChartData(userId: string): Promise<UsageChartData[]> {
   const sevenDaysAgo = new Date();
   sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
 
-  const { data: usageChartRawData, error: usageChartError } = await supabase
+  const { data, error } = await supabase
     .from('usage_logs')
-    .select('created_at, tokens_used')
-    .eq('user_id', userId)
-    .gte('created_at', sevenDaysAgo.toISOString())
-    .order('created_at', { ascending: true });
+    .select('"createdAt", "tokensUsed"')
+    .eq('userId', userId)
+    .gte('"createdAt"', sevenDaysAgo.toISOString())
+    .order('"createdAt"', { ascending: true });
 
-  if (usageChartError) throw usageChartError;
+  if (error) throw error;
 
-  const usageChartDataMap = new Map<string, number>();
-  usageChartRawData.forEach((log: RawUsageChartData) => {
-    const date = new Date(log.created_at).toISOString().split('T')[0];
-    usageChartDataMap.set(date, (usageChartDataMap.get(date) || 0) + log.tokens_used);
+  const usageMap = new Map<string, number>();
+  (data as RawUsageChartData[]).forEach(log => {
+    const date = new Date(log.createdAt).toISOString().split('T')[0];
+    usageMap.set(date, (usageMap.get(date) || 0) + log.tokensUsed);
   });
 
-  return Array.from(usageChartDataMap.entries()).map(([date, tokens_used]) => ({
+  return Array.from(usageMap.entries()).map(([date, tokensUsed]) => ({
     date,
-    tokens_used,
+    tokensUsed,
   }));
 }
 
 export async function fetchRecentActivity(userId: string): Promise<UsageLog[]> {
-  const { data: recentActivity, error: activityError } = await supabase
+  const { data, error } = await supabase
     .from('usage_logs')
-    .select('created_at, description, tokens_used, cost')
-    .eq('user_id', userId)
-    .order('created_at', { ascending: false })
+    .select('"createdAt", description, "tokensUsed", cost')
+    .eq('userId', userId)
+    .order('"createdAt"', { ascending: false })
     .limit(5);
 
-  if (activityError) throw activityError;
-  return recentActivity as UsageLog[];
+  if (error) throw error;
+  return data as UsageLog[];
 }

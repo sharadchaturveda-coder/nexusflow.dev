@@ -1,11 +1,11 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../auth/[...nextauth]';
-import { DashboardData } from '@/types/dashboard';
+import { DashboardData, UsageLog } from '@/types/dashboard';
 import {
   fetchSubscriptionData,
   fetchTotalTokensUsed,
-  fetchTokenLimit,
+  // fetchTokenLimit, // No longer needed as it's part of subscriptionData
   fetchTotalMessages,
   fetchTotalApiCost,
   fetchUsageChartData,
@@ -29,27 +29,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
     const [
       subscriptionData,
       totalTokensUsed,
-      tokenLimit,
       totalMessages,
       totalApiCost,
       usageChartData,
-      recentActivity
+      // recentActivity // Temporarily disabled
     ] = await Promise.all([
       fetchSubscriptionData(userId),
       fetchTotalTokensUsed(userId),
-      fetchTokenLimit(userId),
       fetchTotalMessages(userId),
       fetchTotalApiCost(userId),
       fetchUsageChartData(userId),
-      fetchRecentActivity(userId)
+      // fetchRecentActivity(userId) // Temporarily disabled
     ]);
+
+    const recentActivity: UsageLog[] = []; // Provide a dummy value
 
     const dashboardData: DashboardData = {
       subscription: {
-        plan: subscriptionData?.plan || 'free',
-        tokens_used: totalTokensUsed,
-        token_limit: tokenLimit,
-        user_id: userId, // Ensure user_id is included
+        ...subscriptionData,
+        tokensUsed: totalTokensUsed,
       },
       heroMetrics: {
         totalMessages: totalMessages,

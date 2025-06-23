@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useEffect } from 'react';
+import { useRouter } from 'next/router';
 import UsageChart from './UsageChart';
 import ActiveBotsPanel from './ActiveBotsPanel';
 import QuotaOverview from './QuotaOverview';
@@ -8,6 +9,7 @@ import HeroMetricsSection from './HeroMetricsSection';
 import SystemStatusSection from './SystemStatusSection';
 import { DashboardLayout, DashboardSection } from './DashboardLayout';
 import { HeroMetrics, UsageChartData, UsageLog, Subscription, SystemStatus } from '@/types/dashboard';
+import { ChatMessage } from '@/types/chat';
 
 interface DashboardContentProps {
   metrics: HeroMetrics | null;
@@ -20,6 +22,8 @@ interface DashboardContentProps {
   aiFeedback: any;
   handleFlushMemory: () => void;
   refreshDashboardData: () => void;
+  onConversationLoad?: (messages: ChatMessage[]) => void;
+  currentConversationMessages: ChatMessage[];
 }
 
 const DashboardContent: React.FC<DashboardContentProps> = ({
@@ -33,10 +37,57 @@ const DashboardContent: React.FC<DashboardContentProps> = ({
   aiFeedback,
   handleFlushMemory,
   refreshDashboardData,
+  onConversationLoad,
+  currentConversationMessages,
 }) => {
+  const router = useRouter();
+  const { conversationId } = router.query;
+
+  useEffect(() => {
+    if (conversationId && onConversationLoad) {
+      const fetchConversationMessages = async () => {
+        try {
+          const response = await fetch(`/api/conversations/${conversationId}`);
+          if (!response.ok) {
+            throw new Error(`Error: ${response.statusText}`);
+          }
+          const data = await response.json();
+          onConversationLoad(data.messages);
+        } catch (error) {
+          console.error('Error loading conversation messages:', error);
+        }
+      };
+      fetchConversationMessages();
+    }
+  }, [conversationId, onConversationLoad]);
+
   return (
     <DashboardLayout>
-      <HeroMetricsSection metrics={metrics} />
+      {conversationId ? (
+        <DashboardSection title={`Conversation: ${conversationId}`} delay={0}>
+          <div className="flex flex-col space-y-4">
+            {currentConversationMessages.length > 0 ? (
+              currentConversationMessages.map((message, index) => (
+                <div
+                  key={index}
+                  className={`p-3 rounded-lg ${
+                    message.role === 'user'
+                      ? 'bg-blue-500 text-white self-end'
+                      : 'bg-gray-200 text-gray-800 self-start'
+                  }`}
+                >
+                  <p className="font-semibold capitalize">{message.role}</p>
+                  <p>{message.content}</p>
+                </div>
+              ))
+            ) : (
+              <p className="text-gray-500 text-center py-10">No messages in this conversation.</p>
+            )}
+          </div>
+        </DashboardSection>
+      ) : (
+        <HeroMetricsSection metrics={metrics} />
+      )}
 
       <DashboardSection title="Usage Chart" delay={0.1} className="usageChart">
         {usageData && usageData.length > 0 ? <UsageChart data={usageData} /> : <p className="text-gray-500 text-center py-10">No usage data available.</p>}

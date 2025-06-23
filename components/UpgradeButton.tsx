@@ -24,7 +24,7 @@ export default function UpgradeButton() {
         email: session?.user?.email,
       },
       notes: {
-        userId: session?.user?.id, // CRITICAL: Pass user ID to webhook
+        user_id: session?.user?.id, // CRITICAL: Pass user ID to webhook
       },
       theme: {
         color: "#3399cc"

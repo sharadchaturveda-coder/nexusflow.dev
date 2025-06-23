@@ -72,8 +72,8 @@ const AccountPage = () => {
         <ProfileCard name={userData.name} email={userData.email} image={userData.image} />
         <SubscriptionCard
           plan={userData.plan}
-          tokensUsed={userData.tokensUsed}
-          tokenLimit={userData.tokenLimit}
+          tokens_used={userData.tokens_used}
+          token_limit={userData.token_limit}
           onActivateProTrial={handleActivateProTrial}
         />
         <DangerZoneCard onDeleteAccount={handleDeleteAccount} />

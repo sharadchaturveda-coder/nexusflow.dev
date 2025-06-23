@@ -1,16 +1,16 @@
 import OpenAI from 'openai';
-import { Message } from '../types/chat';
+import { ChatMessage } from '../types/chat';
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,
 });
 
 export async function getGPTResponse(
-  messages: Message[],
+  messages: ChatMessage[],
   model: 'gpt-3.5-turbo' | 'gpt-4o-mini',
   systemPrompt?: string | null
 ) {
-  const systemMessages: Message[] = systemPrompt
+  const systemMessages: ChatMessage[] = systemPrompt
     ? [{ role: 'system', content: systemPrompt }]
     : [];
 

@@ -1,11 +1,13 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Head from 'next/head';
 import { GetServerSideProps } from 'next';
 import Navbar from '../../components/Navbar';
 import styles from '../../styles/Dashboard.module.css';
 import DashboardContent from '../../components/dashboard/DashboardContent';
+import ChatHistorySidebar from '../../components/ChatHistorySidebar';
 import { useDashboardData } from '../../lib/hooks/useDashboardData';
 import { fetchDashboardData } from '../../lib/dashboardDataFetcher';
+import { ChatMessage } from '@/types/chat';
 
 interface DashboardPageProps {
   metrics: any;
@@ -31,6 +33,11 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
   error,
 }) => {
   const { refreshData } = useDashboardData();
+  const [currentConversationMessages, setCurrentConversationMessages] = useState<ChatMessage[]>([]);
+
+  const handleLoadConversation = (messages: ChatMessage[]) => {
+    setCurrentConversationMessages(messages);
+  };
 
   const handleFlushMemory = () => {
     alert('Flushing system memory...');
@@ -53,7 +60,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
   }
 
   return (
-    <div className={`${styles.container} font-sans`}>
+    <div className={`${styles.container} font-sans flex`}>
       <Head>
         <title>Nexus Flow AI - Dashboard</title>
         <meta name="description" content="Nexus Flow AI Dashboard" />
@@ -62,18 +69,23 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </Head>
       <Navbar />
-      <DashboardContent
-        metrics={metrics}
-        usageData={usageData}
-        bots={bots}
-        quota={quota}
-        activities={activities}
-        openaiStatus={openaiStatus}
-        webhookStatus={webhookStatus}
-        aiFeedback={aiFeedback}
-        handleFlushMemory={handleFlushMemory}
-        refreshDashboardData={refreshData}
-      />
+      <ChatHistorySidebar />
+      <div className="flex-grow">
+        <DashboardContent
+          metrics={metrics}
+          usageData={usageData}
+          bots={bots}
+          quota={quota}
+          activities={activities}
+          openaiStatus={openaiStatus}
+          webhookStatus={webhookStatus}
+          aiFeedback={aiFeedback}
+          handleFlushMemory={handleFlushMemory}
+          refreshDashboardData={refreshData}
+          onConversationLoad={handleLoadConversation}
+          currentConversationMessages={currentConversationMessages}
+        />
+      </div>
     </div>
   );
 };

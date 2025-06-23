@@ -11,24 +11,24 @@ export function withQuotaCheck(handler: (req: NextRequest, res: NextResponse) =>
       return new Response('Unauthorized', { status: 401 });
     }
 
-    const userId = token.sub; // `sub` is the standard JWT field for user ID
+    const user_id = token.sub; // `sub` is the standard JWT field for user ID
 
     const { data: subscription, error } = await supabase
         .from('subscriptions')
-        .select('tokensUsed, tokenLimit')
-        .eq('userId', userId)
+        .select('tokens_used, token_limit')
+        .eq('user_id', user_id)
         .single();
 
     if (error || !subscription) {
       return new Response('Subscription not found.', { status: 403 });
     }
 
-    if (subscription.tokensUsed >= subscription.tokenLimit) {
+    if (subscription.tokens_used >= subscription.token_limit) {
       return new Response('Token limit exceeded.', { status: 429 });
     }
 
     // Attach user info to the request for the next handler
-    (req as any).user = { id: userId, subscription };
+    (req as any).user = { id: user_id, subscription };
     return handler(req, res);
   };
 }

@@ -9,7 +9,7 @@ The backend of the Nexus Flow AI project is primarily built using **Next.js API 
 These are the entry points for client-side requests, acting as serverless functions.
 
 *   **`api/messages/relay.ts`**: This is a central API route for AI interactions.
-    *   It receives user messages and a `userId`.
+    *   It receives user messages and a `user_id`.
     *   It applies **middleware** (`withQuotaCheck`) to ensure the user has sufficient token quota before processing the request.
     *   It retrieves the user's conversation history (`getUserMemory`) and the bot's persona (`getBotPersona`).
     *   It sends the combined messages (including system prompt from persona) to the **OpenAI API** via `lib/gptClient.ts`.
@@ -35,7 +35,7 @@ This directory contains reusable modules that encapsulate specific business logi
     *   Handles API key authentication via environment variables (`process.env.OPENAI_API_KEY`).
 *   **`lib/memoryManager.ts`**:
     *   Manages the persistent storage and retrieval of user conversation history.
-    *   Stores messages in individual JSON files (`data/memory/{userId}.json`).
+    *   Stores messages in individual JSON files (`data/memory/{user_id}.json`).
     *   Includes logic for truncating conversation history based on token limits (`MAX_MEMORY_TOKENS`) and message count to prevent excessively long contexts for the AI.
     *   Utilizes Node.js `fs/promises` for asynchronous file system operations.
 *   **`lib/usageLogger.ts`**:
@@ -68,13 +68,13 @@ The project utilizes local JSON files for data persistence, indicating a simpler
 
 ## Overall Backend Flow (Example: AI Message Relay)
 
-1.  A client (frontend) sends a POST request with `userId` and `message` to the `/api/messages/relay` endpoint.
+1.  A client (frontend) sends a POST request with `user_id` and `message` to the `/api/messages/relay` endpoint.
 2.  The request is first processed by the `withQuotaCheck` middleware, which verifies the user's plan and remaining token quota.
 3.  If the quota is sufficient, the main `handler` function in `api/messages/relay.ts` proceeds.
 4.  It fetches the user's past conversation from their dedicated JSON file in `data/memory/` and retrieves the appropriate bot's system prompt.
 5.  It constructs a request to the OpenAI API using `lib/gptClient.ts`, sending the current message along with the conversation history and system prompt.
 6.  Upon receiving the AI's response, the system calculates the cost of the interaction using `lib/tokenCostCalculator.ts` and logs the usage to `data/usage.json` via `lib/usageLogger.ts`.
-7.  The new user message and the AI's response are then appended to the user's conversation history in `data/memory/{userId}.json` using `lib/memoryManager.ts`.
+7.  The new user message and the AI's response are then appended to the user's conversation history in `data/memory/{user_id}.json` using `lib/memoryManager.ts`.
 8.  Finally, the AI's response, along with updated usage details and remaining quota, is sent back to the client.
 
 This robust, serverless-oriented backend architecture leverages Next.js API routes, local file-based data storage, and modularized logic for interacting with external services and managing application-specific data.

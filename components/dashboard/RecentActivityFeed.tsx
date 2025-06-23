@@ -25,7 +25,7 @@ const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({ activities }) =
             </div>
             <div className="flex-1">
               <p className="text-gray-800 text-sm">{activity.description}</p>
-              <p className="text-gray-600 text-xs">{formatRelativeTime(activity.created_at)}</p>
+              <p className="text-gray-600 text-xs">{formatRelativeTime(activity.createdAt)}</p>
             </div>
           </motion.div>
         ))}

@@ -2,17 +2,17 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 interface QuotaProgressBarProps {
-  tokensUsed: number;
-  tokenLimit: number;
+  tokens_used: number;
+  token_limit: number; // Changed tokenLimit to token_limit
   softOverageZone: number;
 }
 
 const QuotaProgressBar: React.FC<QuotaProgressBarProps> = ({
-  tokensUsed,
-  tokenLimit,
+  tokens_used,
+  token_limit, // Changed tokenLimit to token_limit
   softOverageZone,
 }) => {
-  const usagePercentage = (tokensUsed / tokenLimit) * 100;
+  const usagePercentage = (tokens_used / token_limit) * 100; // Changed tokenLimit to token_limit
   const isSoftOverage = usagePercentage >= softOverageZone;
 
   const getGradientColor = (percentage: number) => {
@@ -32,7 +32,7 @@ const QuotaProgressBar: React.FC<QuotaProgressBarProps> = ({
       {isSoftOverage && (
         <div
           className="absolute top-0 h-full bg-orange-300 opacity-20"
-          style={{ left: `${(softOverageZone / tokenLimit) * 100}%`, width: `${100 - (softOverageZone / tokenLimit) * 100}%` }}
+          style={{ left: `${(softOverageZone / token_limit) * 100}%`, width: `${100 - (softOverageZone / token_limit) * 100}%` }} // Changed tokenLimit to token_limit
         ></div>
       )}
     </div>

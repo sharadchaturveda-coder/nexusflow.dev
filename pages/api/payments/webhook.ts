@@ -19,13 +19,13 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   const event = req.body;
   if (event.event === 'payment.captured') {
     const payment = event.payload.payment.entity;
-    const userId = payment.notes.userId; // You MUST pass userId in notes from frontend
+    const userId = payment.notes.userId; // Changed userId to user_id // You MUST pass user_id in notes from frontend
 
     // Update user's plan to 'pro'
     await supabase
       .from('subscriptions')
-      .update({ plan: 'pro', tokenLimit: 100000 }) // Pro plan limit
-      .eq('userId', userId);
+      .update({ plan: 'pro', tokenLimit: 100000 }) // Changed tokenLimit to token_limit // Pro plan limit
+      .eq('userId', userId); // Changed userId to user_id
   }
 
   res.status(200).json({ status: 'ok' });

@@ -6,7 +6,7 @@ const usersPath = path.resolve(process.cwd(), 'data/users.json');
 
 export interface Plan {
   name: string;
-  token_limit: number;
+  tokenLimit: number;
   price: number;
   model: 'gpt-3.5-turbo' | 'gpt-4o-mini';
 }

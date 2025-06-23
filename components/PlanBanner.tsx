@@ -1,12 +1,12 @@
 import React from 'react';
 
 interface PlanBannerProps {
-  tokensUsed: number;
+  tokens_used: number;
   quota: number;
 }
 
-const PlanBanner: React.FC<PlanBannerProps> = ({ tokensUsed, quota }) => {
-  const usagePercentage = (tokensUsed / quota) * 100;
+const PlanBanner: React.FC<PlanBannerProps> = ({ tokens_used, quota }) => {
+  const usagePercentage = (tokens_used / quota) * 100;
   let message = '';
   let color = '';
 

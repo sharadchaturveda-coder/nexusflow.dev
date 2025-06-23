@@ -36,8 +36,8 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     // Fetch subscription data
     const { data: subscriptionData, error: subscriptionError } = await supabase
       .from('subscriptions')
-      .select('plan, tokensUsed, tokenLimit')
-      .eq('user_id', userId)
+      .select('plan, "tokensUsed", "tokenLimit"')
+      .eq('userId', userId)
       .single();
 
     if (subscriptionError) {

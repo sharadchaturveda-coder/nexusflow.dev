@@ -6,10 +6,10 @@ import { supabase } from '../../lib/supabaseClient';
 
 interface UsageLog {
   id: string;
-  userId: string;
-  tokensUsed: number;
+  user_id: string;
+  tokens_used: number;
   cost: number;
-  createdAt: string;
+  created_at: string;
 }
 
 const UsagePage = () => {
@@ -21,13 +21,13 @@ const UsagePage = () => {
   useEffect(() => {
     const fetchData = async () => {
       if (status === 'authenticated' && session?.user?.id) {
-        const userId = session.user.id;
+        const user_id = session.user.id;
 
         // Fetch subscription data
         const { data: subData, error: subError } = await supabase
           .from('subscriptions')
           .select('*')
-          .eq('userId', userId)
+          .eq('user_id', user_id)
           .single();
 
         if (subError && subError.code !== 'PGRST116') { // PGRST116 means no rows found
@@ -35,14 +35,14 @@ const UsagePage = () => {
           setLoading(false);
           return;
         }
-        setSubscription(subData || { plan: 'free', tokensUsed: 0, tokenLimit: 10000 }); // Default free plan
+        setSubscription(subData || { plan: 'free', tokens_used: 0, token_limit: 10000 }); // Default free plan
 
         // Fetch usage logs
         const { data: usageData, error: usageError } = await supabase
           .from('usage_logs')
           .select('*')
-          .eq('userId', userId)
-          .order('createdAt', { ascending: false });
+          .eq('user_id', user_id)
+          .order('created_at', { ascending: false });
 
         if (usageError) {
           console.error('Error fetching usage logs:', usageError);
@@ -69,22 +69,22 @@ const UsagePage = () => {
     return <div>No subscription found.</div>;
   }
 
-  const totalTokensUsed = usage.reduce((acc, log) => acc + log.tokensUsed, 0);
+  const totalTokensUsed = usage.reduce((acc, log) => acc + log.tokens_used, 0);
   const totalCost = usage.reduce((acc, log) => acc + log.cost, 0);
 
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">Usage Dashboard</h1>
-      <PlanBanner tokensUsed={subscription.tokensUsed} quota={subscription.tokenLimit} />
+      <PlanBanner tokens_used={subscription.tokens_used} quota={subscription.token_limit} />
       <div className="mt-4">
-        <UsageStats tokensUsed={subscription.tokensUsed} cost={totalCost} quota={subscription.tokenLimit} />
+        <UsageStats tokens_used={subscription.tokens_used} cost={totalCost} quota={subscription.token_limit} />
       </div>
       <div className="mt-8">
         <h2 className="text-xl font-bold">Usage History</h2>
         <ul>
           {usage.map((log) => (
             <li key={log.id} className="border-b p-2">
-              {new Date(log.createdAt).toLocaleString()}: {log.tokensUsed} tokens used (₹{log.cost.toFixed(2)})
+              {new Date(log.created_at).toLocaleString()}: {log.tokens_used} tokens used (₹{log.cost.toFixed(2)})
             </li>
           ))}
         </ul>

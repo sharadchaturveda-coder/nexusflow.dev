@@ -19,14 +19,14 @@ const QuotaOverview: React.FC<QuotaOverviewProps> = ({
     return <p className="text-gray-500">No quota information available.</p>;
   }
 
-  const { plan, tokens_used = 0, token_limit = 0 } = quota; // Provide default values for safety
-  const softOverageZone = token_limit * 0.9;
-  const isQuotaDanger = token_limit > 0 && (tokens_used / token_limit) * 100 >= 90; // Add check for token_limit > 0
+  const { plan, tokensUsed, tokenLimit } = quota;
+  const softOverageZone = tokenLimit * 0.9;
+  const isQuotaDanger = tokenLimit > 0 && (tokensUsed / tokenLimit) * 100 >= 90;
 
   const handleUpgrade = async () => {
     setIsUpgrading(true);
     try {
-      const response = await fetch('/api/admin/grant-pro-access', {
+      const response = await fetch('/api/user/activate-pro-trial', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -52,13 +52,13 @@ const QuotaOverview: React.FC<QuotaOverviewProps> = ({
       <div className="flex justify-between items-center mb-4">
         <h3 className="text-xl font-semibold text-gray-800">Current Plan: {plan === 'free' ? 'Free Plan' : 'Pro Plan'}</h3>
         <span className="text-lg font-medium text-gray-700">
-          {tokens_used?.toLocaleString() || 'N/A'} / {token_limit?.toLocaleString() || 'N/A'} Tokens Used
+          {(tokensUsed ?? 0).toLocaleString()} / {(tokenLimit ?? 0).toLocaleString()} Tokens Used
         </span>
       </div>
 
       <QuotaProgressBar
-        tokensUsed={tokens_used}
-        tokenLimit={token_limit}
+        tokens_used={tokensUsed}
+        token_limit={tokenLimit}
         softOverageZone={softOverageZone}
       />
 

@@ -6,7 +6,7 @@ import { getUserMemory, updateUserMemory } from '../../lib/memoryManager';
 import { getBotPersona } from '../../lib/botPersona';
 import { supabase } from '../../lib/supabaseClient';
 import { getToken } from 'next-auth/jwt';
-import { Message } from '../../types/chat'; // Import Message from new location
+import { ChatMessage as Message } from '../../types/chat'; // Import Message from new location
 
 async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -22,19 +22,19 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const userId = token.sub;
+  const user_id = token.sub;
 
   const { data: subscription, error: subError } = await supabase
       .from('subscriptions')
-      .select('tokensUsed, tokenLimit')
-      .eq('userId', userId)
+      .select('tokens_used, token_limit')
+      .eq('user_id', user_id)
       .single();
 
   if (subError || !subscription) {
     return res.status(403).json({ error: 'Subscription not found or error fetching subscription.' });
   }
 
-  if (subscription.tokensUsed >= subscription.tokenLimit) {
+  if (subscription.tokens_used >= subscription.token_limit) {
     return res.status(429).json({ error: 'Token limit exceeded.' });
   }
   // End quota check
@@ -44,8 +44,8 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
   }
 
   try {
-    const userMemory = await getUserMemory(userId);
-    const botPersona = await getBotPersona(userId);
+    const userMemory = await getUserMemory(user_id);
+    const botPersona = await getBotPersona(user_id);
 
     const messages: Message[] = [
         ...userMemory,
@@ -59,16 +59,16 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
     // Update memory with both messages
     const newHistory = [...userMemory, userMessage, assistantMessage];
-    await updateUserMemory(userId, newHistory);
+    await updateUserMemory(user_id, newHistory);
 
-    const tokensUsed = (gptResponse || '').length;
-    const cost = calculateCost(tokensUsed, 'gpt-3.5-turbo'); // Use a default model or derive from subscription
+    const tokens_used = (gptResponse || '').length;
+    const cost = calculateCost(tokens_used, 'gpt-3.5-turbo'); // Use a default model or derive from subscription
 
-    await logUsage(userId, tokensUsed, cost);
+    await logUsage(user_id, tokens_used, cost);
 
     res.status(200).json({
       message: gptResponse,
-      tokensUsed,
+      tokens_used,
       costIncurred: cost,
       status: 'OK',
     });

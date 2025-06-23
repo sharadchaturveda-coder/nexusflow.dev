@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../auth/[...nextauth]';
-import { supabase } from '@/lib/supabaseClient';
+import { supabase } from '../../../lib/supabaseClient';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   if (req.method !== 'POST') {
@@ -10,31 +10,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const session = await getServerSession(req, res, authOptions);
 
-  if (!session) {
+  if (!session || !session.user?.id) {
     return res.status(401).json({ error: 'Unauthorized' });
   }
 
-  const userId = session.user?.id;
-
-  if (!userId) {
-    return res.status(400).json({ error: 'User ID not found in session' });
-  }
+  const userId = session.user.id;
 
   try {
-    // Update the user's subscription to 'pro' and increase token limit
     const { data, error } = await supabase
       .from('subscriptions')
-      .update({ plan: 'pro', tokenLimit: 1000000 }) // Example: Set a new higher limit for pro plan
+      .update({ plan: 'pro', tokenLimit: 100000 })
       .eq('userId', userId);
 
     if (error) {
-      console.error('Error granting pro access:', error.message);
+      console.error('Error updating subscription:', error);
       return res.status(500).json({ error: error.message });
     }
 
-    res.status(200).json({ message: 'Pro access granted successfully', data });
+    res.status(200).json({ message: 'Pro trial activated successfully!' });
   } catch (error: any) {
-    console.error('Error in grant-pro-access API:', error.message);
+    console.error('Server error:', error);
     res.status(500).json({ error: error.message });
   }
 }
