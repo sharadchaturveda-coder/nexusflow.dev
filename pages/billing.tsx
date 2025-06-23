@@ -1,10 +1,8 @@
 import React from 'react';
-import Head from 'next/head';
-import Navbar from '../components/Navbar';
 import SubscriptionCard from '../components/account/SubscriptionCard';
-import styles from '../styles/Dashboard.module.css'; // Reusing dashboard styles for layout
 import { useUserProTrialActivation } from '@/lib/hooks/useUserProTrialActivation';
 import { useBillingData } from '@/lib/hooks/useBillingData';
+import BillingLayout from '../components/billing/BillingLayout';
 
 const BillingPage: React.FC = () => {
   const { handleActivateProTrial } = useUserProTrialActivation();
@@ -12,60 +10,36 @@ const BillingPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className={styles.container}>
-        <Head>
-          <title>Nexus Flow AI - Billing</title>
-          <meta name="description" content="Nexus Flow AI Billing Page" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-        <main className={styles.main}>
-          <h1 className={styles.title}>Loading...</h1>
-          <p className={styles.description}>Loading subscription data...</p>
-        </main>
-      </div>
+      <BillingLayout title="Nexus Flow AI - Billing" description="Nexus Flow AI Billing Page">
+        <h1 className="text-3xl font-bold text-gray-900 mb-6">Loading...</h1>
+        <p className="text-gray-500">Loading subscription data...</p>
+      </BillingLayout>
     );
   }
 
   if (error) {
     return (
-      <div className={styles.container}>
-        <Head>
-          <title>Nexus Flow AI - Billing</title>
-          <meta name="description" content="Nexus Flow AI Billing Page" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-        <main className={styles.main}>
-          <h1 className={styles.title}>Error</h1>
-          <p className={styles.description}>{error}</p>
-        </main>
-      </div>
+      <BillingLayout title="Nexus Flow AI - Billing" description="Nexus Flow AI Billing Page">
+        <h1 className="text-3xl font-bold text-red-600 mb-6">Error</h1>
+        <p className="text-red-600">{error}</p>
+      </BillingLayout>
     );
   }
 
   return (
-    <div className={`${styles.container} font-sans flex`}>
-      <Head>
-        <title>Nexus Flow AI - Billing</title>
-        <meta name="description" content="Nexus Flow AI Billing Page" />
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      </Head>
-      <Navbar />
-      <div className="flex-grow p-8">
-        <h1 className="text-3xl font-bold text-gray-900 mb-6">Manage Your Subscription</h1>
-        {subscription ? (
-          <SubscriptionCard
-            plan={subscription.plan}
-            tokens_used={subscription.tokensUsed}
-            token_limit={subscription.tokenLimit}
-            onActivateProTrial={handleActivateProTrial}
-          />
-        ) : (
-          <p>No subscription data available.</p>
-        )}
-      </div>
-    </div>
+    <BillingLayout title="Nexus Flow AI - Billing" description="Nexus Flow AI Billing Page">
+      <h1 className="text-3xl font-bold text-gray-900 mb-6">Manage Your Subscription</h1>
+      {subscription ? (
+        <SubscriptionCard
+          plan={subscription.plan}
+          tokensUsed={subscription.tokensUsed}
+          tokenLimit={subscription.tokenLimit}
+          onActivateProTrial={handleActivateProTrial}
+        />
+      ) : (
+        <p className="text-gray-500">No subscription data available.</p>
+      )}
+    </BillingLayout>
   );
 };
 

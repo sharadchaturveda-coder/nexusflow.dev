@@ -6,7 +6,7 @@ import { useDashboardData } from '../../lib/hooks/useDashboardData';
 import { ChatMessage } from '@/types/chat';
 import { useConversationMessages } from '@/lib/hooks/useConversationMessages';
 import { handleFlushMemory } from '../../lib/dashboard/dashboardUtils';
-import { getServerSideProps } from '../../lib/dashboard/serverSideProps';
+import { DashboardProvider } from '@/lib/context/DashboardContext';
 
 interface DashboardPageProps {
   metrics: any;
@@ -46,7 +46,7 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
 
   return (
     <DashboardLayoutWrapper>
-      <DashboardContent
+      <DashboardProvider
         metrics={metrics}
         usageData={usageData}
         currentConversation={currentConversation}
@@ -59,7 +59,9 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
         refreshDashboardData={refreshData}
         onConversationLoad={handleLoadConversation}
         currentConversationMessages={currentConversationMessages}
-      />
+      >
+        <DashboardContent />
+      </DashboardProvider>
     </DashboardLayoutWrapper>
   );
 };

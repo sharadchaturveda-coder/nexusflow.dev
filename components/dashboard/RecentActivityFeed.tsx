@@ -25,11 +25,11 @@ const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({ activities }) =
             </div>
             <div className="flex-1">
               <p className="text-gray-800 text-sm">
-                {activity.description.includes('Message relayed') ? 'You sent a message' :
-                 activity.description.includes('SupportBot used by user ID') ? 'New conversation started' :
-                 activity.description}
+                {activity.description?.includes('Message relayed') ? 'You sent a message' :
+                 activity.description?.includes('SupportBot used by user ID') ? 'New conversation started' :
+                 activity.description || 'Unknown activity'}
               </p>
-              <p className="text-gray-600 text-xs">{formatRelativeTime(activity.createdAt)}</p>
+              <p className="text-gray-600 text-xs">{formatRelativeTime(activity.created_at)}</p>
             </div>
           </motion.div>
         ))}

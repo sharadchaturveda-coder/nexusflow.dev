@@ -8,43 +8,25 @@ import DashboardQuotaOverviewSection from './DashboardQuotaOverviewSection';
 import DashboardRecentActivitySection from './DashboardRecentActivitySection';
 import DashboardUsageInsightsSection from './DashboardUsageInsightsSection';
 import { DashboardLayout, DashboardSection } from './DashboardLayout';
-import { HeroMetrics, UsageChartData, UsageLog, Subscription, SystemStatus } from '@/types/dashboard';
-import { ChatMessage } from '@/types/chat';
 import { useConversationLoader } from '../../lib/dashboard/dashboardUtils';
+import { useDashboardContext } from '@/lib/context/DashboardContext';
 
-interface DashboardContentProps {
-  metrics: HeroMetrics | null;
-  usageData: UsageChartData[];
-  currentConversation: {
-    status: string;
-    lastMessage: string;
-    totalMessages: number;
-  } | null;
-  quota: Subscription | null;
-  activities: UsageLog[];
-  openaiStatus: SystemStatus | null;
-  webhookStatus: SystemStatus | null;
-  aiFeedback: any;
-  handleFlushMemory: () => void;
-  refreshDashboardData: () => void;
-  onConversationLoad?: (messages: ChatMessage[]) => void;
-  currentConversationMessages: ChatMessage[];
-}
+const DashboardContent: React.FC = () => {
+  const {
+    metrics,
+    usageData,
+    currentConversation,
+    quota,
+    activities,
+    openaiStatus,
+    webhookStatus,
+    aiFeedback,
+    handleFlushMemory,
+    refreshDashboardData,
+    onConversationLoad,
+    currentConversationMessages,
+  } = useDashboardContext();
 
-const DashboardContent: React.FC<DashboardContentProps> = ({
-  metrics,
-  usageData,
-  currentConversation,
-  quota,
-  activities,
-  openaiStatus,
-  webhookStatus,
-  aiFeedback,
-  handleFlushMemory,
-  refreshDashboardData,
-  onConversationLoad,
-  currentConversationMessages,
-}) => {
   const router = useRouter();
   const { conversationId } = router.query;
   useConversationLoader(onConversationLoad || (() => {}));

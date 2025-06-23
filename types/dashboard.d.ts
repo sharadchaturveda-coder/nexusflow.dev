@@ -8,9 +8,11 @@ export interface Subscription {
 }
 
 export interface UsageLog {
-  createdAt: string;
-  description: string;
-  tokensUsed: number;
+  id: string;
+  user_id: string;
+  created_at: string;
+  description?: string; // Made optional
+  tokens_used: number;
   cost: number;
 }
 

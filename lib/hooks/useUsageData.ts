@@ -1,18 +1,11 @@
 import { useEffect, useState } from 'react';
 import { useSession } from 'next-auth/react';
 import { supabase } from '@/lib/supabaseClient';
-
-interface UsageLog {
-  id: string;
-  user_id: string;
-  tokens_used: number;
-  cost: number;
-  created_at: string;
-}
+import { UsageLog, Subscription } from '@/types/dashboard'; // Import UsageLog and Subscription from types
 
 interface UseUsageDataResult {
   usage: UsageLog[];
-  subscription: any | null;
+  subscription: Subscription | null; // Use imported Subscription type
   loading: boolean;
   error: string | null;
 }
@@ -20,7 +13,7 @@ interface UseUsageDataResult {
 export const useUsageData = (): UseUsageDataResult => {
   const { data: session, status } = useSession();
   const [usage, setUsage] = useState<UsageLog[]>([]);
-  const [subscription, setSubscription] = useState<any | null>(null);
+  const [subscription, setSubscription] = useState<Subscription | null>(null); // Use imported Subscription type
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 

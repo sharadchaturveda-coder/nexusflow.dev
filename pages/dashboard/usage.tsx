@@ -3,42 +3,67 @@ import UsageStats from '../../components/UsageStats';
 import PlanBanner from '../../components/PlanBanner';
 import { useSession } from 'next-auth/react';
 import { useUsageData } from '../../lib/hooks/useUsageData';
+import { useUsageTotals } from '@/lib/hooks/useUsageTotals';
+import UsageHistoryList from '../../components/dashboard/UsageHistoryList';
+import SeoHead from '../../components/SeoHead';
+import Navbar from '../../components/Navbar';
+import styles from '../../styles/Dashboard.module.css';
 
 const UsagePage = () => {
   const { status } = useSession();
   const { usage, subscription, loading, error } = useUsageData();
+  const { totalTokensUsed, totalCost, tokenLimit } = useUsageTotals(usage, subscription);
 
   if (loading) {
-    return <div>Loading usage data...</div>;
+    return (
+      <div className={`${styles.container} font-sans flex`}>
+        <SeoHead title="Nexus Flow AI - Usage" description="Nexus Flow AI Usage Dashboard" />
+        <Navbar />
+        <div className="flex-grow p-8">
+          <h1 className="text-2xl font-bold mb-4">Loading Usage Data...</h1>
+          <p className="text-gray-500">Please wait while we fetch your usage statistics.</p>
+        </div>
+      </div>
+    );
   }
 
   if (status === 'unauthenticated') {
-    return <div>Please sign in to view your usage.</div>;
+    return (
+      <div className={`${styles.container} font-sans flex`}>
+        <SeoHead title="Nexus Flow AI - Usage" description="Nexus Flow AI Usage Dashboard" />
+        <Navbar />
+        <div className="flex-grow p-8">
+          <h1 className="text-2xl font-bold mb-4">Access Denied</h1>
+          <p className="text-red-500">Please sign in to view your usage.</p>
+        </div>
+      </div>
+    );
   }
 
   if (!subscription) {
-    return <div>No subscription found.</div>;
+    return (
+      <div className={`${styles.container} font-sans flex`}>
+        <SeoHead title="Nexus Flow AI - Usage" description="Nexus Flow AI Usage Dashboard" />
+        <Navbar />
+        <div className="flex-grow p-8">
+          <h1 className="text-2xl font-bold mb-4">No Subscription Found</h1>
+          <p className="text-gray-500">It seems you don't have an active subscription.</p>
+        </div>
+      </div>
+    );
   }
 
-  const totalTokensUsed = usage.reduce((acc, log) => acc + log.tokens_used, 0);
-  const totalCost = usage.reduce((acc, log) => acc + log.cost, 0);
-
   return (
-    <div className="container mx-auto p-4">
-      <h1 className="text-2xl font-bold mb-4">Usage Dashboard</h1>
-      <PlanBanner tokens_used={subscription.tokens_used} quota={subscription.token_limit} />
-      <div className="mt-4">
-        <UsageStats tokens_used={subscription.tokens_used} cost={totalCost} quota={subscription.token_limit} />
-      </div>
-      <div className="mt-8">
-        <h2 className="text-xl font-bold">Usage History</h2>
-        <ul>
-          {usage.map((log) => (
-            <li key={log.id} className="border-b p-2">
-              {new Date(log.created_at).toLocaleString()}: {log.tokens_used} tokens used (₹{log.cost.toFixed(2)})
-            </li>
-          ))}
-        </ul>
+    <div className={`${styles.container} font-sans flex`}>
+      <SeoHead title="Nexus Flow AI - Usage" description="Nexus Flow AI Usage Dashboard" />
+      <Navbar />
+      <div className="flex-grow p-8">
+        <h1 className="text-2xl font-bold mb-4">Usage Dashboard</h1>
+        <PlanBanner tokens_used={totalTokensUsed} quota={tokenLimit} />
+        <div className="mt-4">
+          <UsageStats tokens_used={totalTokensUsed} cost={totalCost} quota={tokenLimit} />
+        </div>
+        <UsageHistoryList usage={usage} />
       </div>
     </div>
   );
