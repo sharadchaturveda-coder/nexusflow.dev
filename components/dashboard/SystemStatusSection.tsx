@@ -2,7 +2,8 @@ import React from 'react';
 import SystemStatusWidget from './SystemStatusWidget';
 import FlushMemoryButton from './FlushMemoryButton';
 import styles from '../../styles/Dashboard.module.css';
-import { SystemStatus } from '@/types/dashboard'; // Import SystemStatus type
+import { SystemStatus } from '@/types/dashboard';
+import { mapStatusToWidgetStatus } from '../../lib/dashboard/utils/systemStatusUtils';
 
 interface SystemStatusSectionProps {
   openaiStatus: SystemStatus | null;
@@ -15,15 +16,6 @@ const SystemStatusSection: React.FC<SystemStatusSectionProps> = ({
   webhookStatus,
   handleFlushMemory,
 }) => {
-  const mapStatusToWidgetStatus = (status: SystemStatus['status']) => {
-    switch (status) {
-      case 'ok': return 'success';
-      case 'error': return 'failure';
-      case 'pending': return 'loading'; // Map pending to loading for now
-      default: return 'loading';
-    }
-  };
-
   return (
     <section className={`${styles.systemStatus} grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 shadow-soft-lg`}>
       {openaiStatus ? (

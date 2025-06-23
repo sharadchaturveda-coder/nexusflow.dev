@@ -2,7 +2,8 @@ import React from 'react';
 import HeroMetricCard from './HeroMetricCard';
 import { FaEnvelope, FaCoins, FaDollarSign, FaUsers } from 'react-icons/fa';
 import styles from '../../styles/Dashboard.module.css';
-import { HeroMetrics } from '@/types/dashboard'; // Import HeroMetrics
+import { HeroMetrics } from '@/types/dashboard';
+import { formatTotalMessages, formatTokensConsumed, formatTotalApiCost, formatConversationsActive } from '../../lib/dashboard/utils/metricFormatters';
 
 interface HeroMetricsSectionProps {
   metrics: HeroMetrics | null;
@@ -15,27 +16,23 @@ const HeroMetricsSection: React.FC<HeroMetricsSectionProps> = ({ metrics }) => {
         <>
           <HeroMetricCard
             title="Total Messages"
-            value={metrics.totalMessages?.toLocaleString() || 'N/A'}
+            value={formatTotalMessages(metrics)}
             icon={<FaEnvelope />}
-            // delta prop removed as it's not in new HeroMetrics
           />
           <HeroMetricCard
             title="Tokens Consumed"
-            value={metrics.tokensConsumed ? `${(metrics.tokensConsumed / 1000000).toFixed(1)}M` : 'N/A'}
+            value={formatTokensConsumed(metrics)}
             icon={<FaCoins />}
-            // delta prop removed
           />
           <HeroMetricCard
             title="Estimated API Cost"
-            value={metrics.totalApiCost ? `$${metrics.totalApiCost.toFixed(2)}` : 'N/A'}
+            value={formatTotalApiCost(metrics)}
             icon={<FaDollarSign />}
-            // delta prop removed
           />
           <HeroMetricCard
             title="Conversations Active"
-            value={metrics.conversationsActive?.toLocaleString() || 'N/A'}
+            value={formatConversationsActive(metrics)}
             icon={<FaUsers />}
-            // delta prop removed
           />
         </>
       ) : (

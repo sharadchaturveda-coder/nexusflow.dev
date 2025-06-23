@@ -22,6 +22,9 @@ module.exports = {
         'purple-dark': '#6A0DAD', /* For Flush Memory button */
         'purple-light': '#8A2BE2',
       },
+      height: {
+        navbar: '64px', // Corresponds to the height of the Navbar component
+      },
       boxShadow: {
         'soft-lg': '0 10px 15px -3px rgba(0, 0, 0, 0.08), 0 4px 6px -2px rgba(0, 0, 0, 0.04)', /* Softer, more attractive shadow */
         'glow-gold': '0 0 15px rgba(255, 215, 0, 0.6)', /* For card borders */

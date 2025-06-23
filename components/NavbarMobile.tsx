@@ -3,12 +3,15 @@ import { Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import AuthButtons from './auth/AuthButtons';
 import { useSession } from 'next-auth/react';
+import Link from 'next/link'; // Import Link
 
 interface NavbarMobileProps {
-  sections: string[];
+  // No longer needs sections prop
 }
 
-const NavbarMobile: React.FC<NavbarMobileProps> = ({ sections }) => {
+const NavbarMobile: React.FC<NavbarMobileProps> = () => {
+  const { status } = useSession();
+
   return (
     <div className="md:hidden">
       <Menu as="div" className="relative inline-block text-left">
@@ -31,44 +34,97 @@ const NavbarMobile: React.FC<NavbarMobileProps> = ({ sections }) => {
         >
           <Menu.Items className="absolute right-0 mt-2 w-56 origin-top-right divide-y divide-gray-100 rounded-md bg-white shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
             <div className="px-1 py-1 ">
-              {sections.map((section) => (
-                <Menu.Item key={section}>
-                  {({ active }) => (
-                    <a
-                      href={`#${section}`}
-                      className={`${
-                        active ? 'bg-violet-500 text-white' : 'text-gray-900'
-                      } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                    >
-                      {section.charAt(0).toUpperCase() + section.slice(1)}
-                    </a>
-                  )}
-                </Menu.Item>
-              ))}
-              <Menu.Item>
-                {({ active }) => (
-                  <a
-                    href="/dashboard"
-                    className={`${
-                      active ? 'bg-violet-500 text-white' : 'text-gray-900'
-                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                  >
-                    Dashboard
-                  </a>
-                )}
-              </Menu.Item>
-              <Menu.Item>
-                {({ active }) => (
-                  <a
-                    href="/account"
-                    className={`${
-                      active ? 'bg-violet-500 text-white' : 'text-gray-900'
-                    } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
-                  >
-                    My Account
-                  </a>
-                )}
-              </Menu.Item>
+              {status === 'authenticated' ? (
+                <>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <Link
+                        href="/chat"
+                        className={`${
+                          active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                      >
+                        Chat
+                      </Link>
+                    )}
+                  </Menu.Item>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <Link
+                        href="/billing"
+                        className={`${
+                          active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                      >
+                        Billing
+                      </Link>
+                    )}
+                  </Menu.Item>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <Link
+                        href="/help"
+                        className={`${
+                          active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                      >
+                        Help
+                      </Link>
+                    )}
+                  </Menu.Item>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <Link
+                        href="/account"
+                        className={`${
+                          active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                      >
+                        My Account
+                      </Link>
+                    )}
+                  </Menu.Item>
+                </>
+              ) : (
+                <>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <Link
+                        href="/#features"
+                        className={`${
+                          active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                      >
+                        Features
+                      </Link>
+                    )}
+                  </Menu.Item>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <Link
+                        href="/#pricing"
+                        className={`${
+                          active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                      >
+                        Pricing
+                      </Link>
+                    )}
+                  </Menu.Item>
+                  <Menu.Item>
+                    {({ active }) => (
+                      <Link
+                        href="/#faq"
+                        className={`${
+                          active ? 'bg-violet-500 text-white' : 'text-gray-900'
+                        } group flex w-full items-center rounded-md px-2 py-2 text-sm`}
+                      >
+                        FAQ
+                      </Link>
+                    )}
+                  </Menu.Item>
+                </>
+              )}
             </div>
             <div className="px-1 py-1">
               <AuthButtons isMobile={true} />

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import useSWR from 'swr';
 import { DashboardData, HeroMetrics, UsageChartData, UsageLog, Subscription, SystemStatus } from '@/types/dashboard';
 import { useSystemStatus } from './useSystemStatus';
+import { useDashboardMetrics } from './useDashboardMetrics';
 
 // Define the structure for the data returned by the useDashboardData hook
 interface UseDashboardDataResult {
@@ -21,23 +22,7 @@ interface UseDashboardDataResult {
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
 export const useDashboardData = (): UseDashboardDataResult => {
-  const { data, error, isLoading, mutate } = useSWR<DashboardData>('/api/dashboard/all-data', fetcher);
-  const { openaiStatus, webhookStatus, loadingStatus, statusError, refreshSystemStatus } = useSystemStatus();
-
-  const refreshData = useCallback(() => {
-    mutate(); // Re-fetch data from /api/dashboard/all-data
-    refreshSystemStatus(); // Re-fetch status data
-  }, [mutate, refreshSystemStatus]);
-
-  useEffect(() => {
-    refreshData(); // Initial fetch
-  }, [refreshData]);
-
-  // Map the fetched data to the existing state structure
-  const metrics: HeroMetrics | null = data?.heroMetrics || null;
-  const usageData: UsageChartData[] = data?.usageChartData || [];
-  const quota: Subscription | null = data?.subscription || null;
-  const activities: UsageLog[] = data?.recentActivity || [];
+  const { metrics, usageData, quota, activities, openaiStatus, webhookStatus, loading, error, refreshData } = useDashboardMetrics();
 
   // Placeholder for bots and AI Feedback as they are not part of all-data endpoint yet
   const bots: any[] = [{ id: 'default-bot', name: 'SalesBot', personality: 'Helpful AI Assistant', lastUsed: 'Just now', totalUsage: '100 messages' }];
@@ -56,8 +41,8 @@ export const useDashboardData = (): UseDashboardDataResult => {
     openaiStatus,
     webhookStatus,
     aiFeedback,
-    loading: isLoading || loadingStatus,
-    error: error ? error.message : statusError,
+    loading,
+    error,
     refreshData,
   };
 };

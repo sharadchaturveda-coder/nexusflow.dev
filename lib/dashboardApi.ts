@@ -11,50 +11,18 @@ const fetchJson = async (url: string, options: FetchOptions) => {
   return res.ok ? res.json() : null;
 };
 
-export const fetchMetrics = async (context: GetServerSidePropsContext) => {
+const createDashboardFetcher = (path: string) => async (context: GetServerSidePropsContext) => {
   const baseUrl = getBaseUrl();
   const headers = { 'Content-Type': 'application/json', 'Cookie': context.req.headers.cookie || '' };
-  return fetchJson(`${baseUrl}/api/dashboard/metrics`, { headers });
+  return fetchJson(`${baseUrl}${path}`, { headers });
 };
 
-export const fetchUsage = async (context: GetServerSidePropsContext) => {
-  const baseUrl = getBaseUrl();
-  const headers = { 'Content-Type': 'application/json', 'Cookie': context.req.headers.cookie || '' };
-  return fetchJson(`${baseUrl}/api/dashboard/usage`, { headers });
-};
-
-export const fetchBots = async (context: GetServerSidePropsContext) => {
-  const baseUrl = getBaseUrl();
-  const headers = { 'Content-Type': 'application/json', 'Cookie': context.req.headers.cookie || '' };
-  return fetchJson(`${baseUrl}/api/dashboard/bots`, { headers });
-};
-
-export const fetchQuota = async (context: GetServerSidePropsContext) => {
-  const baseUrl = getBaseUrl();
-  const headers = { 'Content-Type': 'application/json', 'Cookie': context.req.headers.cookie || '' };
-  return fetchJson(`${baseUrl}/api/user/quota`, { headers });
-};
-
-export const fetchActivities = async (context: GetServerSidePropsContext) => {
-  const baseUrl = getBaseUrl();
-  const headers = { 'Content-Type': 'application/json', 'Cookie': context.req.headers.cookie || '' };
-  return fetchJson(`${baseUrl}/api/dashboard/activity`, { headers });
-};
-
-export const fetchOpenAIStatus = async (context: GetServerSidePropsContext) => {
-  const baseUrl = getBaseUrl();
-  const headers = { 'Content-Type': 'application/json', 'Cookie': context.req.headers.cookie || '' };
-  return fetchJson(`${baseUrl}/api/status/openai`, { headers });
-};
-
-export const fetchWebhookStatus = async (context: GetServerSidePropsContext) => {
-  const baseUrl = getBaseUrl();
-  const headers = { 'Content-Type': 'application/json', 'Cookie': context.req.headers.cookie || '' };
-  return fetchJson(`${baseUrl}/api/status/webhooks`, { headers });
-};
-
-export const fetchAIFeedback = async (context: GetServerSidePropsContext) => {
-  const baseUrl = getBaseUrl();
-  const headers = { 'Content-Type': 'application/json', 'Cookie': context.req.headers.cookie || '' };
-  return fetchJson(`${baseUrl}/api/ai/feedback`, { headers });
-};
+export const fetchMetrics = createDashboardFetcher('/api/dashboard/metrics');
+export const fetchUsage = createDashboardFetcher('/api/dashboard/usage');
+export const fetchBots = createDashboardFetcher('/api/dashboard/bots');
+export const fetchQuota = createDashboardFetcher('/api/user/quota');
+export const fetchActivities = createDashboardFetcher('/api/dashboard/activity');
+export const fetchOpenAIStatus = createDashboardFetcher('/api/status/openai');
+export const fetchWebhookStatus = createDashboardFetcher('/api/status/webhooks');
+export const fetchAIFeedback = createDashboardFetcher('/api/ai/feedback');
+export const fetchAllDashboardData = createDashboardFetcher('/api/dashboard/all-data');

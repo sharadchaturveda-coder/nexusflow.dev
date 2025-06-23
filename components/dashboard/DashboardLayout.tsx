@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import styles from '../../styles/Dashboard.module.css';
+import DashboardHeader from './DashboardHeader';
 
 interface DashboardSectionProps {
   title: string;
@@ -37,12 +38,7 @@ interface DashboardLayoutProps {
 export const DashboardLayout: React.FC<DashboardLayoutProps> = ({ children }) => {
   return (
     <main className={`${styles.main} pt-20 px-4 sm:px-6 lg:px-8`}>
-      <h1 className={`${styles.title} text-4xl font-extrabold text-gray-900 mb-4 text-center`}>
-        Nexus Flow AI Dashboard
-      </h1>
-      <p className={`${styles.description} text-xl text-gray-600 mb-10 text-center`}>
-        Your control nexus.
-      </p>
+      <DashboardHeader />
       <div className="flex flex-col gap-6 mt-10 w-full">
         {children}
       </div>

@@ -43,6 +43,11 @@ export interface DashboardData {
   heroMetrics: HeroMetrics;
   usageChartData: UsageChartData[];
   recentActivity: UsageLog[];
+  quota: {
+    plan: string;
+    tokensUsed: number;
+    tokenLimit: number;
+  };
 }
 
 export interface SystemStatus {

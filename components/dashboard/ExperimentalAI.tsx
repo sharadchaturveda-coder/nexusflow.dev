@@ -1,6 +1,5 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import PersonalityMessagesChart from './charts/PersonalityMessagesChart';
 import GPTModelUsageChart from './charts/GPTModelUsageChart';
 import ExperimentalAIInsights from './ExperimentalAIInsights';
 
@@ -29,7 +28,7 @@ const ExperimentalAI: React.FC<ExperimentalAIProps> = ({ data }) => {
     return <p className="text-gray-500 text-center py-10">No AI feedback data available.</p>;
   }
 
-  const { personalityMessages, gptModelUsage, insights } = data;
+  const { gptModelUsage, insights } = data;
 
   return (
     <motion.div
@@ -38,8 +37,7 @@ const ExperimentalAI: React.FC<ExperimentalAIProps> = ({ data }) => {
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.5 }}
     >
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <PersonalityMessagesChart data={personalityMessages} />
+      <div className="grid grid-cols-1 gap-6">
         <GPTModelUsageChart data={gptModelUsage} />
       </div>
       <ExperimentalAIInsights insights={insights} />

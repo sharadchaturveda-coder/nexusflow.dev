@@ -2,63 +2,44 @@ import React from 'react';
 import { motion } from 'framer-motion';
 
 interface ActiveBotsPanelProps {
-  bots: any[]; // Using any for now as per the plan for placeholder data
+  currentConversation: {
+    status: string;
+    lastMessage: string;
+    totalMessages: number;
+  } | null;
+  onStartNewChat: () => void;
 }
 
-const ActiveBotsPanel: React.FC<ActiveBotsPanelProps> = ({ bots }) => {
+const ActiveBotsPanel: React.FC<ActiveBotsPanelProps> = ({ currentConversation, onStartNewChat }) => {
   return (
-    <div className="w-full">
-      <div className="overflow-x-auto">
-        <table className="min-w-full bg-white rounded-lg shadow-md">
-          <thead>
-            <tr className="bg-gray-100 text-gray-700 uppercase text-sm leading-normal"> {/* Changed text-gray-600 to text-gray-700 */}
-              <th className="py-3 px-6 text-left">Bot Name</th>
-              <th className="py-3 px-6 text-left">Assigned Personality</th>
-              <th className="py-3 px-6 text-left">Last Used</th>
-              <th className="py-3 px-6 text-left">Total Usage</th>
-              <th className="py-3 px-6 text-center">Actions</th>
-            </tr>
-          </thead>
-          <tbody className="text-gray-700 text-sm font-light">
-            {bots.map((bot, index) => (
-              <motion.tr
-                key={bot.id}
-                className="border-b border-gray-200 hover:bg-gray-50"
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.3, delay: index * 0.05 }}
-              >
-                <td className="py-3 px-6 text-left whitespace-nowrap">
-                  <div className="flex items-center">
-                    <span className="font-medium">{bot.name}</span>
-                  </div>
-                </td>
-                <td className="py-3 px-6 text-left">
-                  <span className="font-medium">{bot.personality}</span>
-                </td>
-                <td className="py-3 px-6 text-left">
-                  {bot.lastUsed}
-                </td>
-                <td className="py-3 px-6 text-left">
-                  {bot.totalUsage}
-                </td>
-                <td className="py-3 px-6 text-center">
-                  <div className="flex item-center justify-center space-x-2">
-                    <button className="bg-purple-gradient text-gray-900 font-bold py-1 px-3 rounded-md shadow-md hover:scale-105 transition-all text-xs">
-                      View Logs
-                    </button>
-                    <button className="bg-orange-gradient text-gray-900 font-bold py-1 px-3 rounded-md shadow-md hover:scale-105 transition-all text-xs">
-                      Reset Memory
-                    </button>
-                    <button className="bg-red-500 hover:bg-red-600 text-white font-bold py-1 px-3 rounded-md shadow-md hover:scale-105 transition-all text-xs">
-                      Disable
-                    </button>
-                  </div>
-                </td>
-              </motion.tr>
-            ))}
-          </tbody>
-        </table>
+    <div className="w-full p-6 bg-white rounded-xl shadow-soft-lg">
+      <div className="space-y-4">
+        {currentConversation ? (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-gray-800">
+            <div>
+              <p className="text-sm font-semibold">Status:</p>
+              <p className="text-lg">{currentConversation.status}</p>
+            </div>
+            <div>
+              <p className="text-sm font-semibold">Last Message:</p>
+              <p className="text-lg">{currentConversation.lastMessage}</p>
+            </div>
+            <div>
+              <p className="text-sm font-semibold">Total Messages:</p>
+              <p className="text-lg">{currentConversation.totalMessages}</p>
+            </div>
+          </div>
+        ) : (
+          <p className="text-gray-500 text-center py-10">No active conversation.</p>
+        )}
+        <div className="flex justify-center mt-4">
+          <button
+            onClick={onStartNewChat}
+            className="bg-orange-gradient text-gray-900 font-bold py-2 px-4 rounded-md shadow-md hover:scale-105 transition-all text-sm"
+          >
+            Start New Chat
+          </button>
+        </div>
       </div>
     </div>
   );

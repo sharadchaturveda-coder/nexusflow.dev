@@ -1,15 +1,6 @@
 import { GetServerSidePropsContext } from 'next';
 import { getSession } from 'next-auth/react';
-import {
-  fetchMetrics,
-  fetchUsage,
-  fetchBots,
-  fetchQuota,
-  fetchActivities,
-  fetchOpenAIStatus,
-  fetchWebhookStatus,
-  fetchAIFeedback,
-} from './dashboardApi';
+import { fetchAllDashboardData } from './dashboardApi';
 
 export async function fetchDashboardData(context: GetServerSidePropsContext) {
   const session = await getSession(context);
@@ -24,36 +15,18 @@ export async function fetchDashboardData(context: GetServerSidePropsContext) {
   }
 
   try {
-    const [
-      metrics,
-      usageData,
-      bots,
-      quota,
-      activities,
-      openaiStatus,
-      webhookStatus,
-      aiFeedback,
-    ] = await Promise.all([
-      fetchMetrics(context),
-      fetchUsage(context),
-      fetchBots(context),
-      fetchQuota(context),
-      fetchActivities(context),
-      fetchOpenAIStatus(context),
-      fetchWebhookStatus(context),
-      fetchAIFeedback(context),
-    ]);
+    const data = await fetchAllDashboardData(context);
 
     return {
       props: {
-        metrics,
-        usageData,
-        bots,
-        quota,
-        activities,
-        openaiStatus,
-        webhookStatus,
-        aiFeedback,
+        metrics: data?.metrics || null,
+        usageData: data?.usageData || [],
+        currentConversation: data?.currentConversation || null,
+        quota: data?.quota || null,
+        activities: data?.activities || [],
+        openaiStatus: data?.openaiStatus || null,
+        webhookStatus: data?.webhookStatus || null,
+        aiFeedback: data?.aiFeedback || null,
       },
     };
   } catch (error) {
@@ -62,7 +35,7 @@ export async function fetchDashboardData(context: GetServerSidePropsContext) {
       props: {
         metrics: null,
         usageData: [],
-        bots: [],
+        currentConversation: null,
         quota: null,
         activities: [],
         openaiStatus: null,

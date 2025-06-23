@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
-import Head from 'next/head';
-import { GetServerSideProps } from 'next';
-import Navbar from '../../components/Navbar';
-import styles from '../../styles/Dashboard.module.css';
 import DashboardContent from '../../components/dashboard/DashboardContent';
-import ChatHistorySidebar from '../../components/ChatHistorySidebar';
+import DashboardErrorPage from '../../components/dashboard/DashboardErrorPage';
+import DashboardLayoutWrapper from '../../components/dashboard/DashboardLayoutWrapper';
 import { useDashboardData } from '../../lib/hooks/useDashboardData';
-import { fetchDashboardData } from '../../lib/dashboardDataFetcher';
 import { ChatMessage } from '@/types/chat';
+import { useConversationMessages } from '@/lib/hooks/useConversationMessages';
+import { handleFlushMemory } from '../../lib/dashboard/dashboardUtils';
+import { getServerSideProps } from '../../lib/dashboard/serverSideProps';
 
 interface DashboardPageProps {
   metrics: any;
   usageData: any;
-  bots: any;
+  currentConversation: any;
   quota: any;
   activities: any;
   openaiStatus: any;
@@ -24,7 +23,7 @@ interface DashboardPageProps {
 const DashboardPage: React.FC<DashboardPageProps> = ({
   metrics,
   usageData,
-  bots,
+  currentConversation,
   quota,
   activities,
   openaiStatus,
@@ -39,59 +38,30 @@ const DashboardPage: React.FC<DashboardPageProps> = ({
     setCurrentConversationMessages(messages);
   };
 
-  const handleFlushMemory = () => {
-    alert('Flushing system memory...');
-  };
+  useConversationMessages({ onConversationLoad: handleLoadConversation });
 
   if (error) {
-    return (
-      <div className={styles.container}>
-        <Head>
-          <title>Nexus Flow AI - Dashboard</title>
-          <meta name="description" content="Nexus Flow AI Dashboard" />
-          <link rel="icon" href="/favicon.ico" />
-        </Head>
-        <main className={styles.main}>
-          <h1 className={styles.title}>Error</h1>
-          <p className={styles.description}>{error}</p>
-        </main>
-      </div>
-    );
+    return <DashboardErrorPage error={error} />;
   }
 
   return (
-    <div className={`${styles.container} font-sans flex`}>
-      <Head>
-        <title>Nexus Flow AI - Dashboard</title>
-        <meta name="description" content="Nexus Flow AI Dashboard" />
-        <link rel="icon" href="/favicon.ico" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-      </Head>
-      <Navbar />
-      <ChatHistorySidebar />
-      <div className="flex-grow">
-        <DashboardContent
-          metrics={metrics}
-          usageData={usageData}
-          bots={bots}
-          quota={quota}
-          activities={activities}
-          openaiStatus={openaiStatus}
-          webhookStatus={webhookStatus}
-          aiFeedback={aiFeedback}
-          handleFlushMemory={handleFlushMemory}
-          refreshDashboardData={refreshData}
-          onConversationLoad={handleLoadConversation}
-          currentConversationMessages={currentConversationMessages}
-        />
-      </div>
-    </div>
+    <DashboardLayoutWrapper>
+      <DashboardContent
+        metrics={metrics}
+        usageData={usageData}
+        currentConversation={currentConversation}
+        quota={quota}
+        activities={activities}
+        openaiStatus={openaiStatus}
+        webhookStatus={webhookStatus}
+        aiFeedback={aiFeedback}
+        handleFlushMemory={handleFlushMemory}
+        refreshDashboardData={refreshData}
+        onConversationLoad={handleLoadConversation}
+        currentConversationMessages={currentConversationMessages}
+      />
+    </DashboardLayoutWrapper>
   );
-};
-
-export const getServerSideProps: GetServerSideProps = async (context) => {
-  return fetchDashboardData(context);
 };
 
 export default DashboardPage;

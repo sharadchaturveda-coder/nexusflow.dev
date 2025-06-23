@@ -5,12 +5,12 @@ import { DashboardData, UsageLog } from '@/types/dashboard';
 import {
   fetchSubscriptionData,
   fetchTotalTokensUsed,
-  // fetchTokenLimit, // No longer needed as it's part of subscriptionData
   fetchTotalMessages,
   fetchTotalApiCost,
   fetchUsageChartData,
   fetchRecentActivity
 } from '@/lib/dashboard/dataFetchers';
+import { constructDashboardData } from '@/lib/dashboard/utils/dashboardDataConstructors';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse<DashboardData | { error: string }>) {
   const session = await getServerSession(req, res, authOptions);
@@ -42,22 +42,16 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse<
       // fetchRecentActivity(userId) // Temporarily disabled
     ]);
 
-    const recentActivity: UsageLog[] = []; // Provide a dummy value
+    const recentActivity: UsageLog[] = []; // Provide a dummy value for now, as it's temporarily disabled
 
-    const dashboardData: DashboardData = {
-      subscription: {
-        ...subscriptionData,
-        tokensUsed: totalTokensUsed,
-      },
-      heroMetrics: {
-        totalMessages: totalMessages,
-        totalApiCost: totalApiCost,
-        tokensConsumed: totalTokensUsed,
-        conversationsActive: totalMessages,
-      },
-      usageChartData: usageChartData,
-      recentActivity: recentActivity,
-    };
+    const dashboardData = constructDashboardData({
+      subscriptionData,
+      totalTokensUsed,
+      totalMessages,
+      totalApiCost,
+      usageChartData,
+      recentActivity,
+    });
 
     res.status(200).json(dashboardData);
   } catch (error: any) {

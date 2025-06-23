@@ -1,61 +1,12 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import UsageStats from '../../components/UsageStats';
 import PlanBanner from '../../components/PlanBanner';
 import { useSession } from 'next-auth/react';
-import { supabase } from '../../lib/supabaseClient';
-
-interface UsageLog {
-  id: string;
-  user_id: string;
-  tokens_used: number;
-  cost: number;
-  created_at: string;
-}
+import { useUsageData } from '../../lib/hooks/useUsageData';
 
 const UsagePage = () => {
-  const { data: session, status } = useSession();
-  const [usage, setUsage] = useState<UsageLog[]>([]);
-  const [subscription, setSubscription] = useState<any | null>(null); // Use 'any' for now, define a proper interface later if needed
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      if (status === 'authenticated' && session?.user?.id) {
-        const user_id = session.user.id;
-
-        // Fetch subscription data
-        const { data: subData, error: subError } = await supabase
-          .from('subscriptions')
-          .select('*')
-          .eq('user_id', user_id)
-          .single();
-
-        if (subError && subError.code !== 'PGRST116') { // PGRST116 means no rows found
-          console.error('Error fetching subscription:', subError);
-          setLoading(false);
-          return;
-        }
-        setSubscription(subData || { plan: 'free', tokens_used: 0, token_limit: 10000 }); // Default free plan
-
-        // Fetch usage logs
-        const { data: usageData, error: usageError } = await supabase
-          .from('usage_logs')
-          .select('*')
-          .eq('user_id', user_id)
-          .order('created_at', { ascending: false });
-
-        if (usageError) {
-          console.error('Error fetching usage logs:', usageError);
-          setLoading(false);
-          return;
-        }
-        setUsage(usageData || []);
-      }
-      setLoading(false);
-    };
-
-    fetchData();
-  }, [session, status]);
+  const { status } = useSession();
+  const { usage, subscription, loading, error } = useUsageData();
 
   if (loading) {
     return <div>Loading usage data...</div>;
