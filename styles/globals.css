@@ -11,8 +11,17 @@ body {
   background-color: #FFFDF9;
   color: #1a202c;
   font-size: 1rem; /* Default body text size */
+  padding-bottom: 1px; /* Added to prevent descender clipping */
   /* Subtle patterned background */
   background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.05'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 20v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM12 14v-4h-2v4H6v2h4v4h2v-4h4v-2h-4zm0 20v-4h-2v4H6v2h4v4h2v-4h4v-2h-4zm0 20v-4h-2v4H6v2h4v4h2v-4h4v-2h-4zM36 14v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM12 0v-4h-2v4H6v2h4v4h2v-4h4v-2h-4zM36 0v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM0 44v-4h-2v4H-4v2h4v4h2v-4h4v-2h-4zm0 20v-4h-2v4H-4v2h4v4h2v-4h4v-2h-4zM24 14v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 20v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 20v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM24 0v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM0 0v-4h-2v4H-4v2h4v4h2v-4h4v-2h-4zM48 44v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0 20v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zM48 0v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+
+h1, h2, h3, h4, h5, h6 {
+  line-height: 1.7; /* Reverted to non-important, keeping generous line-height */
+  display: inline-block; /* Ensures proper box model for vertical alignment */
+  vertical-align: bottom; /* Aligns the baseline of the text to the bottom of its line box */
+  overflow: visible; /* Ensure content is not clipped by its own box */
+  transform: translateZ(0); /* Forces hardware acceleration, can fix rendering glitches */
 }
 
 h1 { font-size: 3rem; } /* 48px */
@@ -28,4 +37,14 @@ p, li {
 
 section {
   scroll-margin-top: 100px; /* Adjust for navbar height */
+}
+
+@layer utilities {
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
+  }
 }

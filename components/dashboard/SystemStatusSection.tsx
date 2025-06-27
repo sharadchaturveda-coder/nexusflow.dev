@@ -1,4 +1,3 @@
-import React from 'react';
 import SystemStatusWidget from './SystemStatusWidget';
 import FlushMemoryButton from './FlushMemoryButton';
 import styles from '../../styles/Dashboard.module.css';

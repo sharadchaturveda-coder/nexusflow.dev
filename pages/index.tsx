@@ -2,17 +2,16 @@ import type { NextPage } from 'next';
 import Head from 'next/head';
 import Navbar from '../components/Navbar';
 import Hero from '../components/home/Hero';
-import BeforeAfter from '../components/home/BeforeAfter';
 import ProblemSolution from '../components/home/ProblemSolution';
-import DashboardPreview from '../components/home/DashboardPreview';
-import RateSlider from '../components/RateSlider';
-import Pricing from '../components/home/Pricing';
+import TrustSection from '../components/home/TrustSection';
 import BotFlowEditor from '../components/home/BotFlowEditor';
 import InfiniteBusinessScroll from '../components/InfiniteBusinessScroll';
 import Testimonials from '../components/home/Testimonials';
 import FAQ from '../components/home/FAQ';
 import HowItWorks from '../components/home/HowItWorks';
 import CTA from '../components/home/CTA';
+// import LiveConversation from '../components/home/LiveConversation'; // Temporarily removed as per user request
+// import DashboardPreview from '../components/home/DashboardPreview'; // Removed as per user request
 
 const Home: NextPage = () => {
   return (
@@ -28,18 +27,15 @@ const Home: NextPage = () => {
         <div id="home">
           <Hero />
         </div>
+        {/* <LiveConversation /> Temporarily removed as per user request */}
         <div id="features">
-          <BeforeAfter />
           <ProblemSolution />
+          <TrustSection />
           <BotFlowEditor />
         </div>
-        <div id="dashboard">
+        {/* <div id="dashboard">
           <DashboardPreview />
-        </div>
-        <div id="pricing">
-          <RateSlider />
-          <Pricing />
-        </div>
+        </div> */}
         <div id="testimonials">
           <Testimonials />
         </div>

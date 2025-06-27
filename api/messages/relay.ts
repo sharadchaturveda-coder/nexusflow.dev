@@ -13,9 +13,12 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
-  const { message } = req.body;
+  const { message, conversationId } = req.body;
 
-  // Perform quota check directly in the API route
+  if (!message || !conversationId) {
+    return res.status(400).json({ error: 'message and conversationId are required' });
+  }
+
   const token = await getToken({ req, secret: process.env.NEXTAUTH_SECRET! });
 
   if (!token || !token.sub) {
@@ -24,26 +27,42 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
 
   const user_id = token.sub;
 
-  const { data: subscription, error: subError } = await supabase
+  try {
+    const { data: subscription, error: subError } = await supabase
       .from('subscriptions')
-      .select('tokens_used, token_limit')
+      .select('conversations_used, conversation_limit, last_conversation_id')
       .eq('user_id', user_id)
       .single();
 
-  if (subError || !subscription) {
-    return res.status(403).json({ error: 'Subscription not found or error fetching subscription.' });
-  }
+    if (subError || !subscription) {
+      return res.status(403).json({ error: 'Subscription not found or error fetching subscription.' });
+    }
 
-  if (subscription.tokens_used >= subscription.token_limit) {
-    return res.status(429).json({ error: 'Token limit exceeded.' });
-  }
-  // End quota check
+    if (subscription.conversations_used >= subscription.conversation_limit) {
+      return res.status(429).json({ error: 'Conversation limit exceeded.' });
+    }
 
-  if (!message) {
-    return res.status(400).json({ error: 'message is required' });
-  }
+    // Check if this conversationId has already been processed
+    let shouldIncrementConversation = false;
+    if (subscription.last_conversation_id !== conversationId) {
+      shouldIncrementConversation = true;
+    }
 
-  try {
+    if (shouldIncrementConversation) {
+      const { error: updateError } = await supabase
+        .from('subscriptions')
+        .update({
+          conversations_used: subscription.conversations_used + 1,
+          last_conversation_id: conversationId,
+        })
+        .eq('user_id', user_id);
+
+      if (updateError) {
+        console.error('Error updating conversation count:', updateError);
+        return res.status(500).json({ error: 'Failed to update conversation count.' });
+      }
+    }
+
     const userMemory = await getUserMemory(user_id);
     const botPersona = await getBotPersona(user_id);
 
@@ -62,7 +81,7 @@ async function handler(req: NextApiRequest, res: NextApiResponse) {
     await updateUserMemory(user_id, newHistory);
 
     const tokens_used = (gptResponse || '').length;
-    const cost = calculateCost(tokens_used, 'gpt-3.5-turbo'); // Use a default model or derive from subscription
+    const cost = calculateCost(tokens_used, 'gpt-3.5-turbo');
 
     await logUsage(user_id, tokens_used, cost);
 

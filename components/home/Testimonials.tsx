@@ -1,16 +1,17 @@
 import { motion } from 'framer-motion';
+import Image from 'next/image';
 
-function TestimonialCard({ name, title, avatar, children }: { name: string, title: string, avatar: string, children: React.ReactNode }) {
+export function TestimonialCard({ name, title, avatar, children }: { name: string, title: string, avatar: string, children: React.ReactNode }) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ type: 'spring', stiffness: 100, damping: 10, delay: 0.1 }}
-      whileHover={{ scale: 1.05, y: -5, boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}
+      transition={{ type: 'spring', stiffness: 300, damping: 20, delay: 0.1 }}
+      whileHover={{ scale: 1.05, y: -5, boxShadow: '0 10px 20px rgba(0,0,0,0.1)', transition: { type: 'spring', stiffness: 300, damping: 25 } }}
       className="bg-white/30 backdrop-blur-lg border border-white/20 p-6 rounded-2xl shadow-2xl"
     >
       <div className="flex items-center mb-4">
-        <img src={avatar} alt="Avatar" className="w-12 h-12 rounded-full mr-4 border-2 border-goldenrod" />
+        <Image src={avatar} alt="Avatar" width={48} height={48} className="w-12 h-12 rounded-full mr-4 border-2 border-goldenrod" />
         <div>
           <p className="font-bold">{name}</p>
           <p className="text-sm text-gray-500">{title}</p>
@@ -25,8 +26,8 @@ export default function Testimonials() {
   return (
     <section className="py-20 px-4 bg-blush">
       <div className="max-w-4xl mx-auto text-center mb-12">
-        <h2 className="text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-pink-600 to-yellow-400 bg-clip-text text-transparent tracking-tight mb-4">
-          They're Already Obsessed.
+        <h2 className="text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-pink-600 to-yellow-400 bg-clip-text text-transparent tracking-tight mb-4 pb-4">
+          The New Standard<br />in Customer Delight
         </h2>
         <p className="text-lg text-gray-700 max-w-xl mx-auto">
           Real businesses. Real automation.

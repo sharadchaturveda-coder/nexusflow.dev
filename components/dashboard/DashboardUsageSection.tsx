@@ -1,4 +1,3 @@
-import React from 'react';
 import UsageChart from './UsageChart';
 import { DashboardSection } from './DashboardLayout';
 import { UsageChartData } from '@/types/dashboard';

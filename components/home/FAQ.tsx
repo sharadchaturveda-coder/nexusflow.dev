@@ -5,8 +5,8 @@ export default function FAQ() {
   return (
     <section className="py-20 px-4 bg-white">
       <div className="max-w-4xl mx-auto text-center mb-12">
-        <h2 className="text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-pink-600 to-yellow-400 bg-clip-text text-transparent tracking-tight mb-4">
-          You Ask. We Auto-Reply.
+        <h2 className="text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-pink-600 to-yellow-400 bg-clip-text text-transparent tracking-tight mb-4 pb-4">
+          You Ask.<br />We Auto-Reply
         </h2>
         <p className="text-lg text-gray-700 max-w-xl mx-auto">
           Some answers are better when they're expected.

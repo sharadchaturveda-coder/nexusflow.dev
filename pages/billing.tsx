@@ -1,4 +1,3 @@
-import React from 'react';
 import SubscriptionCard from '../components/account/SubscriptionCard';
 import { useUserProTrialActivation } from '@/lib/hooks/useUserProTrialActivation';
 import { useBillingData } from '@/lib/hooks/useBillingData';

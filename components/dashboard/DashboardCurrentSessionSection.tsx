@@ -1,4 +1,3 @@
-import React from 'react';
 import ActiveBotsPanel from './ActiveBotsPanel';
 import { DashboardSection } from './DashboardLayout';
 

@@ -10,8 +10,8 @@ export default function BotFlowEditor() {
           transition={{ duration: 1.2, ease: 'easeOut' }}
           viewport={{ once: true }}
         >
-          <h2 className="text-5xl font-extrabold text-gray-800 tracking-tight">
-            Build a Brain, Not Just Replies.
+          <h2 className="text-5xl font-extrabold text-gray-800 tracking-tight pb-4">
+            Build a Brain,<br />Not Just Replies
           </h2>
           <p className="mt-4 text-lg text-gray-600 max-w-xl mx-auto">
             Nexus Flow AI is more than a chatbot. It's a memory-wired, feedback-optimizing cognition engine that adapts, evolves, and understands.

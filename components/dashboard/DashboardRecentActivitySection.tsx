@@ -1,4 +1,3 @@
-import React from 'react';
 import RecentActivityFeed from './RecentActivityFeed';
 import { DashboardSection } from './DashboardLayout';
 import { UsageLog } from '@/types/dashboard';

@@ -1,4 +1,3 @@
-import React from 'react';
 import MobileMenuItemLink from './NavbarMobileMenuItemLink';
 
 const MobileUnauthenticatedNavLinks: React.FC = () => {

@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import AuthButtons from './auth/AuthButtons';
 import { useSession } from 'next-auth/react';
@@ -34,7 +33,7 @@ const NavbarDesktop: React.FC<NavbarDesktopProps> = () => {
           <Link href="/#features" className="hover:text-pink-600 transition-all">
             Features
           </Link>
-          <Link href="/#pricing" className="hover:text-pink-600 transition-all">
+          <Link href="/pricing" className="hover:text-pink-600 transition-all">
             Pricing
           </Link>
           <Link href="/#faq" className="hover:text-pink-600 transition-all">

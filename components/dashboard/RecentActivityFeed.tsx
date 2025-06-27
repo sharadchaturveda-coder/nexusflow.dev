@@ -1,6 +1,5 @@
-import React from 'react';
 import { motion } from 'framer-motion';
-import { FaEnvelope } from 'react-icons/fa';
+import { EnvelopeIcon } from '@heroicons/react/24/outline';
 import { UsageLog } from '@/types/dashboard';
 import { formatRelativeTime } from '@/lib/dashboard/utils/timeFormatters';
 
@@ -21,7 +20,7 @@ const RecentActivityFeed: React.FC<RecentActivityFeedProps> = ({ activities }) =
             transition={{ duration: 0.3, delay: index * 0.05 }}
           >
             <div className="flex-shrink-0 mt-1">
-              <FaEnvelope className="text-purple-dark" />
+              <EnvelopeIcon className="h-5 w-5 text-purple-dark" />
             </div>
             <div className="flex-1">
               <p className="text-gray-800 text-sm">

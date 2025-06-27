@@ -1,4 +1,3 @@
-import React from 'react';
 import ChatHistorySidebar from '../components/ChatHistorySidebar';
 import ChatDisplay from '../components/chat/ChatDisplay';
 import ChatInputForm from '../components/chat/ChatInputForm';

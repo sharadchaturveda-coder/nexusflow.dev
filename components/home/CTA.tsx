@@ -3,8 +3,8 @@ import { motion } from 'framer-motion';
 export default function CTA() {
   return (
     <section className="py-20 px-4 text-center bg-gradient-to-r from-blush to-orange-100">
-      <h2 className="text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-pink-600 to-yellow-400 bg-clip-text text-transparent tracking-tight mb-4">
-        Nexus Flow Is the End of Manual Replies
+      <h2 className="text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-pink-600 to-yellow-400 bg-clip-text text-transparent tracking-tight mb-4 pb-4">
+        Nexus Flow Is the End of<br />Manual Replies
       </h2>
       <p className="text-lg text-gray-700 max-w-xl mx-auto">
         Start your trial. Your future’s already responding.

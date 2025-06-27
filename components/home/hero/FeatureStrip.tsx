@@ -7,7 +7,7 @@ export default function FeatureStrip() {
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: 'easeOut', delay: 0.6 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 25, delay: 0.6 }}
         whileHover={{ scale: 1.05, y: -5, boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}
         className="bg-white/60 backdrop-blur-md p-6 rounded-2xl shadow-lg border border-gray-200 text-center"
       >
@@ -18,7 +18,7 @@ export default function FeatureStrip() {
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: 'easeOut', delay: 0.8 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 25, delay: 0.8 }}
         whileHover={{ scale: 1.05, y: -5, boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}
         className="bg-white/60 backdrop-blur-md p-6 rounded-2xl shadow-lg border border-gray-200 text-center"
       >
@@ -29,7 +29,7 @@ export default function FeatureStrip() {
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: 'easeOut', delay: 1 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 25, delay: 1 }}
         whileHover={{ scale: 1.05, y: -5, boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}
         className="bg-white/60 backdrop-blur-md p-6 rounded-2xl shadow-lg border border-gray-200 text-center"
       >
@@ -40,7 +40,7 @@ export default function FeatureStrip() {
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: 'easeOut', delay: 1.2 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 25, delay: 1.2 }}
         whileHover={{ scale: 1.05, y: -5, boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}
         className="bg-white/60 backdrop-blur-md p-6 rounded-2xl shadow-lg border border-gray-200 text-center"
       >
@@ -51,7 +51,7 @@ export default function FeatureStrip() {
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: 'easeOut', delay: 1.4 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 25, delay: 1.4 }}
         whileHover={{ scale: 1.05, y: -5, boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}
         className="bg-white/60 backdrop-blur-md p-6 rounded-2xl shadow-lg border border-gray-200 text-center"
       >
@@ -62,7 +62,7 @@ export default function FeatureStrip() {
       <motion.div
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: 'easeOut', delay: 1.6 }}
+        transition={{ type: 'spring', stiffness: 300, damping: 25, delay: 1.6 }}
         whileHover={{ scale: 1.05, y: -5, boxShadow: '0 10px 20px rgba(0,0,0,0.1)' }}
         className="bg-white/60 backdrop-blur-md p-6 rounded-2xl shadow-lg border border-gray-200 text-center"
       >

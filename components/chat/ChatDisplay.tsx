@@ -1,4 +1,3 @@
-import React from 'react';
 import { ChatMessage } from '@/types/chat';
 import { formatMessageForDisplay } from '@/lib/chat/utils/formatters';
 
@@ -14,9 +13,9 @@ const ChatDisplay: React.FC<ChatDisplayProps> = ({ messages }) => {
         <p className="text-gray-500">Start a new conversation or select one from the history.</p>
       )}
       {messages.map((message, index) => (
-        <React.Fragment key={index}>
+        <>
           {formatMessageForDisplay(message)}
-        </React.Fragment>
+        </>
       ))}
     </div>
   );

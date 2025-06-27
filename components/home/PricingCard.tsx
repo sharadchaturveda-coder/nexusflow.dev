@@ -22,7 +22,8 @@ export default function PricingCard({ plan, isYearly, isSelected, onSelect }: Pr
     <motion.div
       initial={{ opacity: 0, y: 50 }}
       whileInView={{ opacity: 1, y: 0 }}
-      transition={{ delay: 0.1 }}
+      transition={{ delay: 0.1, duration: 0.2, ease: "easeOut" }}
+      whileHover={{ scale: 1.02, boxShadow: '0 10px 20px rgba(0,0,0,0.1)', transition: { duration: 0.15, ease: "easeOut" } }}
       className={`p-8 rounded-2xl shadow-lg flex flex-col cursor-pointer transition-all ${
         isSelected ? 'border-2 border-magenta shadow-2xl' : 'border border-gray-200'
       } ${plan.popular ? 'bg-gradient-to-br from-orange-100 to-pink-100' : 'bg-white'}`}

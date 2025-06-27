@@ -1,4 +1,3 @@
-import React from 'react';
 import QuotaOverview from './QuotaOverview';
 import { DashboardSection } from './DashboardLayout';
 import { Subscription } from '@/types/dashboard';

@@ -15,16 +15,16 @@ export function withQuotaCheck(handler: (req: NextRequest, res: NextResponse) =>
 
     const { data: subscription, error } = await supabase
         .from('subscriptions')
-        .select('tokens_used, token_limit')
+        .select('conversations_used, conversation_limit')
         .eq('user_id', user_id)
         .single();
 
     if (error || !subscription) {
-      return new Response('Subscription not found.', { status: 403 });
+      return new Response('Subscription not found or error fetching subscription.', { status: 403 });
     }
 
-    if (subscription.tokens_used >= subscription.token_limit) {
-      return new Response('Token limit exceeded.', { status: 429 });
+    if (subscription.conversations_used >= subscription.conversation_limit) {
+      return new Response('Conversation limit exceeded.', { status: 429 });
     }
 
     // Attach user info to the request for the next handler

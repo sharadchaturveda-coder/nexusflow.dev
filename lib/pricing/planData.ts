@@ -3,10 +3,10 @@ import UpgradeButton from '@/components/UpgradeButton';
 export const plans = [
   {
     id: 'free',
-    name: 'Free Forever',
+    name: 'Free Trial',
     price: '₹0',
-    features: ['50 replies/mo', '1 Channel', 'GPT-3.5'],
-    button: null, // This will be rendered dynamically in Pricing.tsx
+    features: ['50 AI-Handled Conversations', '1 Channel', 'GPT-3.5'],
+    button: 'Start Your Free Trial', // This will be rendered dynamically in Pricing.tsx
   },
   {
     id: 'startup',

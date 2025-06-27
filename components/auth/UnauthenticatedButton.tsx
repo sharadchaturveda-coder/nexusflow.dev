@@ -1,4 +1,3 @@
-import React from 'react';
 import { useAuthStatus } from '@/lib/hooks/useAuthStatus';
 
 const UnauthenticatedButton: React.FC = () => {

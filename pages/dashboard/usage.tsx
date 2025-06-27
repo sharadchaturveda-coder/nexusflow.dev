@@ -1,4 +1,3 @@
-import React from 'react';
 import UsageStats from '../../components/UsageStats';
 import PlanBanner from '../../components/PlanBanner';
 import { useSession } from 'next-auth/react';

@@ -1,6 +1,5 @@
-import React from 'react';
 import HeroMetricCard from './HeroMetricCard';
-import { FaEnvelope, FaCoins, FaDollarSign, FaUsers } from 'react-icons/fa';
+import { EnvelopeIcon, CurrencyDollarIcon, UsersIcon } from '@heroicons/react/24/outline';
 import styles from '../../styles/Dashboard.module.css';
 import { HeroMetrics } from '@/types/dashboard';
 import { formatTotalMessages, formatTokensConsumed, formatTotalApiCost, formatConversationsActive } from '../../lib/dashboard/utils/metricFormatters';
@@ -17,22 +16,22 @@ const HeroMetricsSection: React.FC<HeroMetricsSectionProps> = ({ metrics }) => {
           <HeroMetricCard
             title="Total Messages"
             value={formatTotalMessages(metrics)}
-            icon={<FaEnvelope />}
+            icon={<EnvelopeIcon className="h-6 w-6 text-blue-500" />}
           />
           <HeroMetricCard
             title="Tokens Consumed"
             value={formatTokensConsumed(metrics)}
-            icon={<FaCoins />}
+            icon={<CurrencyDollarIcon className="h-6 w-6 text-yellow-500" />}
           />
           <HeroMetricCard
             title="Estimated API Cost"
             value={formatTotalApiCost(metrics)}
-            icon={<FaDollarSign />}
+            icon={<CurrencyDollarIcon className="h-6 w-6 text-green-500" />}
           />
           <HeroMetricCard
             title="Conversations Active"
             value={formatConversationsActive(metrics)}
-            icon={<FaUsers />}
+            icon={<UsersIcon className="h-6 w-6 text-purple-500" />}
           />
         </>
       ) : (

@@ -1,4 +1,3 @@
-import React from 'react';
 import Navbar from '../Navbar';
 import SeoHead from '../SeoHead';
 import styles from '../../styles/Dashboard.module.css';

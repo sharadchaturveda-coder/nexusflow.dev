@@ -1,4 +1,3 @@
-import React from 'react';
 import { UsageLog } from '@/types/dashboard';
 
 interface UsageHistoryListProps {

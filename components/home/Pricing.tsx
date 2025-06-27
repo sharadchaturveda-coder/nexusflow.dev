@@ -14,8 +14,8 @@ export default function Pricing() {
   return (
     <section className="py-20 px-4 bg-cream">
       <div className="max-w-4xl mx-auto text-center mb-12">
-        <h2 className="text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-pink-600 to-yellow-400 bg-clip-text text-transparent tracking-tight mb-4">
-          Plans Made to Scale. Or Seduce.
+        <h2 className="text-4xl md:text-6xl font-extrabold bg-gradient-to-r from-pink-600 to-yellow-400 bg-clip-text text-transparent tracking-tight mb-4 pb-4">
+          Plans Made to Scale.<br />Or Seduce.
         </h2>
         <p className="text-lg text-gray-700 max-w-xl mx-auto">
           Only pay for what you whisper. Or scream.

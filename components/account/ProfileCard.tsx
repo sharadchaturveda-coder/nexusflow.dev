@@ -1,4 +1,5 @@
-import React from 'react';
+
+import Image from 'next/image';
 
 interface ProfileCardProps {
   name: string;
@@ -25,7 +26,7 @@ const ProfileCard: React.FC<ProfileCardProps> = ({ name, email, image }) => {
             </dt>
             <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
               {image ? (
-                <img src={image} alt="User Avatar" className="h-16 w-16 rounded-full" />
+                <Image src={image} alt="User Avatar" width={64} height={64} className="h-16 w-16 rounded-full" />
               ) : (
                 <span className="inline-block h-16 w-16 rounded-full overflow-hidden bg-gray-100">
                   <svg className="h-full w-full text-gray-300" fill="currentColor" viewBox="0 0 24 24">

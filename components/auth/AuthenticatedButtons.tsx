@@ -3,6 +3,7 @@ import { Menu, Transition } from '@headlessui/react';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
 import { useAuthStatus } from '@/lib/hooks/useAuthStatus';
 import Link from 'next/link';
+import Image from 'next/image';
 
 interface AuthenticatedButtonsProps {
   isMobile?: boolean;
@@ -16,7 +17,13 @@ const AuthenticatedButtons: React.FC<AuthenticatedButtonsProps> = ({ isMobile = 
       <div>
         <Menu.Button className={`inline-flex w-full justify-center rounded-md bg-gradient-to-r from-pink-500 to-yellow-400 px-4 py-2 text-sm font-medium text-white hover:bg-opacity-30 focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 ${isMobile ? 'bg-gradient-to-r from-magenta to-orange' : ''}`}>
           {session?.user?.image ? (
-            <img src={session.user.image} alt="User Avatar" className="h-6 w-6 rounded-full mr-2" />
+            <Image
+              src={session.user.image}
+              alt="User Avatar"
+              width={24}
+              height={24}
+              className="h-6 w-6 rounded-full mr-2"
+            />
           ) : (
             <span className="mr-2">{session?.user?.email || 'Account'}</span>
           )}

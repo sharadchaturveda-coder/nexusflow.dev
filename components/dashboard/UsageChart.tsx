@@ -1,4 +1,3 @@
-import React from 'react'; // Removed useState as selectedMetric is no longer needed
 import {
   Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, BarChart, Bar
 } from 'recharts';

@@ -1,6 +1,5 @@
-import React from 'react';
 import { motion } from 'framer-motion';
-import { FaCheckCircle, FaTimesCircle, FaSpinner } from 'react-icons/fa';
+import { CheckCircleIcon, XCircleIcon, ArrowPathIcon } from '@heroicons/react/24/solid';
 
 interface SystemStatusWidgetProps {
   title: string;
@@ -19,9 +18,9 @@ const SystemStatusWidget: React.FC<SystemStatusWidgetProps> = ({
 }) => {
   const statusIcon = () => {
     switch (status) {
-      case 'success': return <FaCheckCircle className="text-green-500 text-2xl" />;
-      case 'failure': return <FaTimesCircle className="text-red-500 text-2xl" />;
-      case 'loading': return <FaSpinner className="text-purple-dark text-2xl animate-spin" />; {/* Changed to purple-dark */}
+      case 'success': return <CheckCircleIcon className="h-5 w-5 text-green-500" />;
+      case 'failure': return <XCircleIcon className="h-5 w-5 text-red-500" />;
+      case 'loading': return <ArrowPathIcon className="h-5 w-5 text-blue-500 animate-spin" />;
       default: return null;
     }
   };
