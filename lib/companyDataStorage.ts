@@ -1,26 +1,41 @@
-import fs from 'fs/promises';
-import path from 'path';
+import { supabase } from './supabaseClient';
 
-const COMPANY_DATA_DIR = path.resolve(process.cwd(), 'data/company_data');
+export async function writeCompanyDocument(userId: string, documentName: string, content: string): Promise<void> {
+  const { error } = await supabase
+    .from('company_documents')
+    .upsert(
+      { user_id: userId, document_name: documentName, content: content, uploaded_at: new Date().toISOString() },
+      { onConflict: 'user_id,document_name' }
+    );
 
-export async function ensureCompanyDataDirExists() {
-  try {
-    await fs.mkdir(COMPANY_DATA_DIR, { recursive: true });
-  } catch (error) {
-    console.error('Error creating company data directory:', error);
+  if (error) {
+    console.error('Error writing company document:', error);
+    throw error;
   }
 }
 
-export async function writeCompanyDocument(id: string, content: string): Promise<void> {
-  const filePath = path.join(COMPANY_DATA_DIR, `${id}.json`);
-  await fs.writeFile(filePath, content, 'utf-8');
-}
+export async function clearCompanyDataDirectory(userId: string): Promise<void> {
+  const { error } = await supabase
+    .from('company_documents')
+    .delete()
+    .eq('user_id', userId);
 
-export async function clearCompanyDataDirectory(): Promise<void> {
-  try {
-    await fs.rm(COMPANY_DATA_DIR, { recursive: true, force: true });
-    await ensureCompanyDataDirExists(); // Recreate empty directory
-  } catch (error) {
+  if (error) {
     console.error('Error clearing company data directory:', error);
+    throw error;
   }
+}
+
+export async function getCompanyDocuments(userId: string): Promise<any[]> {
+  const { data, error } = await supabase
+    .from('company_documents')
+    .select('*')
+    .eq('user_id', userId);
+
+  if (error) {
+    console.error('Error fetching company documents:', error);
+    throw error;
+  }
+
+  return data || [];
 }

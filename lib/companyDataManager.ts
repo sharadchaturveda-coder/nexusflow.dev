@@ -1,6 +1,4 @@
-import { ensureCompanyDataDirExists, writeCompanyDocument, clearCompanyDataDirectory } from './companyDataStorage';
-
-ensureCompanyDataDirExists();
+import { writeCompanyDocument, clearCompanyDataDirectory } from './companyDataStorage';
 
 export interface CompanyDocument {
   id: string;
@@ -15,7 +13,7 @@ export interface CompanyDocument {
  * before storing it in a vector database.
  */
 export async function ingestCompanyData(document: CompanyDocument): Promise<void> {
-  await writeCompanyDocument(document.id, JSON.stringify(document, null, 2));
+  await writeCompanyDocument(document.id, document.name, JSON.stringify(document, null, 2));
   console.log(`Company document "${document.name}" ingested.`);
 }
 
@@ -38,7 +36,7 @@ export async function retrieveCompanyContext(query: string): Promise<string[]> {
 /**
  * Placeholder function to clear all company data.
  */
-export async function clearAllCompanyData(): Promise<void> {
-  await clearCompanyDataDirectory();
+export async function clearAllCompanyData(userId: string): Promise<void> {
+  await clearCompanyDataDirectory(userId);
   console.log('All company data cleared.');
 }

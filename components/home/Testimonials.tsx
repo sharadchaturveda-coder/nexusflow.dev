@@ -34,13 +34,13 @@ export default function Testimonials() {
         </p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
-        <TestimonialCard name="Sarah J." title="Founder of a D2C brand" avatar="https://i.pravatar.cc/40?u=a042581f4e29026704d">
+        <TestimonialCard name="Sarah J." title="Founder of a D2C brand" avatar="https://i.pravatar.cc/40?u=a042581f4e29026705d">
           "Nexus Flow AI has transformed our customer support. We're saving hours every day and our customers are happier."
         </TestimonialCard>
-        <TestimonialCard name="Mike R." title="Marketing Manager" avatar="https://i.pravatar.cc/40?u=a042581f4e29026704e">
+        <TestimonialCard name="Mike R." title="Marketing Manager" avatar="https://i.pravatar.cc/40?u=a042581f4e29026705f">
           "The ability to handle all our social media DMs in one place is a game-changer. The AI is scarily good."
         </TestimonialCard>
-        <TestimonialCard name="Emily K." title="E-commerce Store Owner" avatar="https://i.pravatar.cc/40?u=a042581f4e29026704f">
+        <TestimonialCard name="Emily K." title="E-commerce Store Owner" avatar="https://i.pravatar.cc/40?u=a042581f4e29026705e">
           "I was skeptical at first, but Nexus Flow has exceeded all my expectations. It's like having a new team member."
         </TestimonialCard>
       </div>

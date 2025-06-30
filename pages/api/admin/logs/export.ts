@@ -1,5 +1,5 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import { exportUsageLogs } from '@/lib/admin/logExporter';
+import { exportUsageLogs, jsonToCsv } from '@/lib/admin/logExporter';
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const adminToken = req.headers['x-admin-token'];
@@ -14,11 +14,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-        const csvData = await exportUsageLogs();
+        const logData = await exportUsageLogs();
+        const csvString = jsonToCsv(logData);
 
         res.setHeader('Content-Type', 'text/csv');
         res.setHeader('Content-Disposition', 'attachment; filename="usage_logs.csv"');
-        res.status(200).send(csvData);
+        res.status(200).send(csvString);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Internal server error' });

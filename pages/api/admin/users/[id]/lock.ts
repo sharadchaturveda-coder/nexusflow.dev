@@ -1,27 +1,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
-import fs from 'fs/promises';
-import path from 'path';
-const usersPath = path.resolve(process.cwd(), 'data/users.json');
+import { supabase } from '@/lib/supabaseClient';
 
-export interface User {
-    id: string;
-    planId: string;
-    botPersonality?: string;
-    locked?: boolean;
-}
+import { User } from '@/lib/planChecker';
 
-async function getUsers(): Promise<User[]> {
-    try {
-        const fileContent = await fs.readFile(usersPath, 'utf-8');
-        return JSON.parse(fileContent);
-    } catch (error) {
-        return [];
-    }
-}
-
-async function saveUsers(users: User[]): Promise<void> {
-    await fs.writeFile(usersPath, JSON.stringify(users, null, 2), 'utf-8');
-}
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
     const adminToken = req.headers['x-admin-token'];
@@ -43,15 +24,26 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     try {
-        const users = await getUsers();
-        const userIndex = users.findIndex(u => u.id === id);
+        const { data: user, error: fetchError } = await supabase
+            .from('users')
+            .select('*')
+            .eq('id', id)
+            .single();
 
-        if (userIndex === -1) {
+        if (fetchError || !user) {
+            console.error('Error fetching user from Supabase:', fetchError);
             return res.status(404).json({ error: 'User not found' });
         }
 
-        users[userIndex].locked = locked;
-        await saveUsers(users);
+        const { error: updateError } = await supabase
+            .from('users')
+            .update({ locked: locked })
+            .eq('id', id);
+
+        if (updateError) {
+            console.error('Error updating user in Supabase:', updateError);
+            return res.status(500).json({ error: 'Failed to update user' });
+        }
 
         res.status(200).json({ message: `User ${id} has been ${locked ? 'locked' : 'unlocked'}` });
     } catch (error) {

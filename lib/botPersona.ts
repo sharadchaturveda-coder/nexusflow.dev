@@ -1,26 +1,16 @@
-import fs from 'fs/promises';
-import path from 'path';
-
-const USERS_FILE = path.resolve(process.cwd(), 'data/users.json');
-
-interface User {
-  id: string;
-  planId: string;
-  botPersonality?: string;
-  locked?: boolean;
-}
-
-async function getUsers(): Promise<User[]> {
-  try {
-    const fileContent = await fs.readFile(USERS_FILE, 'utf-8');
-    return JSON.parse(fileContent);
-  } catch (error) {
-    return [];
-  }
-}
+import { supabase } from './supabaseClient';
 
 export async function getBotPersona(userId: string): Promise<string | null> {
-  const users = await getUsers();
-  const user = users.find(u => u.id === userId);
-  return user?.botPersonality || null;
+  const { data, error } = await supabase
+    .from('bot_personas')
+    .select('persona_content')
+    .eq('user_id', userId)
+    .single();
+
+  if (error && error.code !== 'PGRST116') { // PGRST116 means no rows found, which is fine
+    console.error('Error fetching bot persona:', error);
+    throw error;
+  }
+
+  return data ? data.persona_content : null;
 }

@@ -1,8 +1,8 @@
 import fs from 'fs/promises';
 import path from 'path';
+import { supabase } from '@/lib/supabaseClient';
 
 const packagesPath = path.resolve(process.cwd(), 'data/packages.json');
-const usersPath = path.resolve(process.cwd(), 'data/users.json');
 
 export interface Plan {
   name: string;
@@ -19,13 +19,21 @@ export interface User {
 }
 
 export async function getPlanByUserId(userId: string): Promise<Plan | undefined> {
-    const usersFileContent = await fs.readFile(usersPath, 'utf-8');
-    const users: User[] = JSON.parse(usersFileContent);
-    const user = users.find(u => u.id === userId);
+    const { data: user, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+    if (error) {
+        console.error('Error fetching user from Supabase:', error);
+        return undefined;
+    }
 
     if (!user) {
         return undefined;
     }
+
 
     const packagesFileContent = await fs.readFile(packagesPath, 'utf-8');
     const plans: Plan[] = JSON.parse(packagesFileContent);
@@ -33,7 +41,15 @@ export async function getPlanByUserId(userId: string): Promise<Plan | undefined>
 }
 
 export async function getUser(userId: string): Promise<User | undefined> {
-    const usersFileContent = await fs.readFile(usersPath, 'utf-8');
-    const users: User[] = JSON.parse(usersFileContent);
-    return users.find(u => u.id === userId);
+    const { data: user, error } = await supabase
+        .from('users')
+        .select('*')
+        .eq('id', userId)
+        .single();
+
+    if (error) {
+        console.error('Error fetching user from Supabase:', error);
+        return undefined;
+    }
+    return user || undefined;
 }

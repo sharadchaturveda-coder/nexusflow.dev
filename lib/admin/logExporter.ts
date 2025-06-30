@@ -1,7 +1,4 @@
-import fs from 'fs/promises';
-import path from 'path';
-
-const usageLogPath = path.resolve(process.cwd(), 'data/usage.json');
+import { supabase } from '../supabaseClient';
 
 export function jsonToCsv(items: any[]): string {
     if (items.length === 0) {
@@ -16,8 +13,16 @@ export function jsonToCsv(items: any[]): string {
     return [headerString, ...rowItems].join('\r\n');
 }
 
-export async function exportUsageLogs(): Promise<string> {
-    const fileContent = await fs.readFile(usageLogPath, 'utf-8');
-    const usageData = JSON.parse(fileContent);
-    return jsonToCsv(usageData);
+export async function exportUsageLogs(): Promise<any[]> {
+    const { data, error } = await supabase
+        .from('usage_logs')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+    if (error) {
+        console.error('Error fetching usage logs:', error);
+        throw error;
+    }
+
+    return data || [];
 }
