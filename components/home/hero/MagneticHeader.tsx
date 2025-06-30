@@ -1,5 +1,12 @@
 import { motion } from 'framer-motion';
-import Image from 'next/image';
+
+const avatarUrls = [
+  'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?q=80&w=2960&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=2576&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1580489944761-15a19d654956?q=80&w=2561&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?q=80&w=2940&auto=format&fit=crop',
+  'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2574&auto=format&fit=crop',
+];
 
 export default function MagneticHeader() {
   return (
@@ -31,21 +38,23 @@ export default function MagneticHeader() {
           See Demo
         </a>
       </div>
-      {/* Stacked Avatars Element */}
-      <div className="mt-12 flex items-center justify-center -space-x-2">
-        {Array.from({ length: 7 }).map((_, i) => (
-          <Image
-            key={i}
-            className="w-10 h-10 rounded-full border-2 border-white"
-            src={`https://randomuser.me/api/portraits/men/${i + 1}.jpg`} // Placeholder avatars
-            alt={`User ${i + 1}`}
-            width={40}
-            height={40}
-          />
-        ))}
-        <span className="ml-4 text-lg font-semibold text-gray-700">
-          273 businesses automated their support this week.
-        </span>
+      <div className="mt-6 flex items-center justify-center">
+        {/* The Stacked Avatars */}
+        <div className="flex -space-x-4">
+          {avatarUrls.map((url, index) => (
+            <img
+              key={index}
+              className="h-10 w-10 rounded-full border-2 border-white object-cover"
+              src={url}
+              alt={`User ${index + 1}`}
+            />
+          ))}
+        </div>
+
+        {/* The Text */}
+        <p className="ml-4 text-sm font-medium text-gray-600">
+          <span className="font-bold text-gray-800">273 businesses</span> automated their support this week.
+        </p>
       </div>
     </motion.div>
   );

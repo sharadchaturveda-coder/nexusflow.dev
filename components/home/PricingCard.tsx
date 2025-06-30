@@ -4,20 +4,20 @@ interface Plan {
   id: string;
   name: string;
   price: string;
-  yearlyPrice?: string;
+  keyLimit?: string;
   features: string[];
   popular?: boolean;
-  button?: React.ReactNode; // Add button prop
+  button: string;
+  link?: string;
 }
 
 interface PricingCardProps {
   plan: Plan;
-  isYearly: boolean;
   isSelected: boolean;
   onSelect: (id: string) => void;
 }
 
-export default function PricingCard({ plan, isYearly, isSelected, onSelect }: PricingCardProps) {
+export default function PricingCard({ plan, isSelected, onSelect }: PricingCardProps) {
   return (
     <motion.div
       initial={{ opacity: 0, y: 50 }}
@@ -34,22 +34,28 @@ export default function PricingCard({ plan, isYearly, isSelected, onSelect }: Pr
           Most Popular
         </div>
       )}
-      <h3 className="text-2xl font-bold mb-4 text-gray-900">{plan.name}</h3>
-      <p className="text-4xl font-black mb-4 text-gray-900">{isYearly ? plan.yearlyPrice : plan.price}</p>
+      <h3 className="text-2xl font-bold mb-2 text-gray-900">{plan.name}</h3>
+      <p className="text-4xl font-black mb-2 text-gray-900">{plan.price}</p>
+      {plan.keyLimit && <p className="text-sm text-gray-500 mb-4">{plan.keyLimit}</p>}
       <ul className="text-gray-600 space-y-2 flex-grow">
         {plan.features.map((feature, i) => (
-          <li key={i}>{feature}</li>
+          <li key={i} className="flex items-center">
+            <svg className="w-5 h-5 text-green-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path></svg>
+            {feature}
+          </li>
         ))}
       </ul>
-      {plan.button ? (
-        <div className="mt-8">
-          {plan.button}
-        </div>
-      ) : (
-        <button className={`mt-8 font-bold py-3 px-6 rounded-full transition-all ${isSelected ? 'bg-magenta text-white' : 'bg-gray-200 text-gray-800'}`}>
-          Choose Plan
-        </button>
-      )}
+      <div className="mt-8">
+        {plan.link ? (
+          <a href={plan.link} className={`block text-center font-bold py-3 px-6 rounded-full transition-all ${isSelected ? 'bg-magenta text-white' : 'bg-gray-200 text-gray-800'}`}>
+            {plan.button}
+          </a>
+        ) : (
+          <button className={`w-full font-bold py-3 px-6 rounded-full transition-all ${isSelected ? 'bg-magenta text-white' : 'bg-gray-200 text-gray-800'}`}>
+            {plan.button}
+          </button>
+        )}
+      </div>
     </motion.div>
   );
 }

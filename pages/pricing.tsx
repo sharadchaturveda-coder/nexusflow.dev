@@ -8,7 +8,7 @@ import { TestimonialCard } from '../components/home/Testimonials'; // Re-using t
 
 export default function PricingPage() {
   const [isYearly, setIsYearly] = useState(false);
-  const [selectedPlan, setSelectedPlan] = useState<string | null>('growth');
+  const [selectedPlan, setSelectedPlan] = useState<string | null>('pro');
 
   const handleSelect = (planId: string) => {
     setSelectedPlan(planId);
@@ -31,23 +31,11 @@ export default function PricingPage() {
             Choose the plan that's right for your business.
           </p>
         </div>
-        <div className="flex justify-center items-center mb-12">
-          <span className="mr-4 font-bold text-gray-800">Monthly</span>
-          <label className="relative inline-flex items-center cursor-pointer">
-            <input type="checkbox" checked={isYearly} onChange={() => setIsYearly(!isYearly)} className="sr-only peer" />
-            <div className="w-14 h-7 bg-gray-200 peer-focus:outline-none peer-focus:ring-4 peer-focus:ring-magenta/50 rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[4px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-6 after:w-6 after:transition-all peer-checked:bg-magenta"></div>
-          </label>
-          <span className="ml-4 font-bold text-gray-800">Yearly (Save 10%)</span>
-        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 max-w-7xl mx-auto">
           {plans.map((plan) => (
             <PricingCard
               key={plan.id}
-              plan={{
-                ...plan,
-                button: plan.id === 'free' ? <UpgradeButton /> : null,
-              }}
-              isYearly={isYearly}
+              plan={plan}
               isSelected={selectedPlan === plan.id}
               onSelect={handleSelect}
             />
@@ -92,21 +80,45 @@ export default function PricingPage() {
               <thead>
                 <tr className="bg-gray-100 border-b border-gray-200">
                   <th className="py-3 px-6 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Feature</th>
-                  <th className="py-3 px-6 text-center text-sm font-semibold text-gray-600 uppercase tracking-wider">Free Trial</th>
+                  <th className="py-3 px-6 text-center text-sm font-semibold text-gray-600 uppercase tracking-wider">Starter</th>
                   <th className="py-3 px-6 text-center text-sm font-semibold text-gray-600 uppercase tracking-wider">Pro</th>
+                  <th className="py-3 px-6 text-center text-sm font-semibold text-gray-600 uppercase tracking-wider">Business</th>
                   <th className="py-3 px-6 text-center text-sm font-semibold text-gray-600 uppercase tracking-wider">Enterprise</th>
                 </tr>
               </thead>
               <tbody>
                 <tr className="border-b border-gray-100">
-                  <td className="py-4 px-6 text-sm text-gray-800">AI-Handled Conversations</td>
+                  <td className="py-4 px-6 text-sm text-gray-800">AI Conversations / mo</td>
                   <td className="py-4 px-6 text-center text-sm text-gray-800">50</td>
                   <td className="py-4 px-6 text-center text-sm text-gray-800">500</td>
-                  <td className="py-4 px-6 text-center text-sm text-gray-800">Unlimited</td>
+                  <td className="py-4 px-6 text-center text-sm text-gray-800">1,500</td>
+                  <td className="py-4 px-6 text-center text-sm text-gray-800">Custom</td>
                 </tr>
                 <tr className="border-b border-gray-100">
-                  <td className="py-4 px-6 text-sm text-gray-800">Zendesk Integration</td>
+                  <td className="py-4 px-6 text-sm text-gray-800">Standard AI Model</td>
+                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                </tr>
+                <tr className="border-b border-gray-100">
+                  <td className="py-4 px-6 text-sm text-gray-800">Chat History</td>
+                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                </tr>
+                <tr className="border-b border-gray-100">
+                  <td className="py-4 px-6 text-sm text-gray-800">Train AI on Your Own Data (URLs, PDFs)</td>
                   <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
+                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                </tr>
+                <tr className="border-b border-gray-100">
+                  <td className="py-4 px-6 text-sm text-gray-800">Advanced AI Model (GPT-4)</td>
+                  <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
+                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
                   <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
                   <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
                 </tr>
@@ -115,15 +127,39 @@ export default function PricingPage() {
                   <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
                   <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
                   <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
                 </tr>
                 <tr className="border-b border-gray-100">
-                  <td className="py-4 px-6 text-sm text-gray-800">Custom AI Training</td>
+                  <td className="py-4 px-6 text-sm text-gray-800">Team Collaboration (3 seats)</td>
+                  <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
+                  <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
+                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                </tr>
+                <tr className="border-b border-gray-100">
+                  <td className="py-4 px-6 text-sm text-gray-800">Advanced Analytics</td>
+                  <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
+                  <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
+                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                </tr>
+                <tr className="border-b border-gray-100">
+                  <td className="py-4 px-6 text-sm text-gray-800">SOC 2 Compliance</td>
+                  <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
+                  <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
+                  <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
+                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                </tr>
+                <tr className="border-b border-gray-100">
+                  <td className="py-4 px-6 text-sm text-gray-800">Dedicated Account Manager</td>
+                  <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
                   <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
                   <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
                   <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
                 </tr>
                 <tr>
-                  <td className="py-4 px-6 text-sm text-gray-800">Dedicated Account Manager</td>
+                  <td className="py-4 px-6 text-sm text-gray-800">Custom Integrations</td>
+                  <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
                   <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
                   <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
                   <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
