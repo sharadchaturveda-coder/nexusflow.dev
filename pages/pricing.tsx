@@ -38,6 +38,7 @@ export default function PricingPage() {
               plan={plan}
               isSelected={selectedPlan === plan.id}
               onSelect={handleSelect}
+              isYearly={isYearly}
             />
           ))}
         </div>

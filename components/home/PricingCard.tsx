@@ -15,6 +15,7 @@ interface PricingCardProps {
   plan: Plan;
   isSelected: boolean;
   onSelect: (id: string) => void;
+  isYearly: boolean;
 }
 
 export default function PricingCard({ plan, isSelected, onSelect }: PricingCardProps) {
