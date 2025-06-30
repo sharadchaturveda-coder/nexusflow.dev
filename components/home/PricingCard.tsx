@@ -7,7 +7,7 @@ interface Plan {
   keyLimit?: string;
   features: string[];
   popular?: boolean;
-  button: string;
+  button: React.ReactNode;
   link?: string;
 }
 
@@ -48,12 +48,12 @@ export default function PricingCard({ plan, isSelected, onSelect }: PricingCardP
       <div className="mt-8">
         {plan.link ? (
           <a href={plan.link} className={`block text-center font-bold py-3 px-6 rounded-full transition-all ${isSelected ? 'bg-magenta text-white' : 'bg-gray-200 text-gray-800'}`}>
-            {plan.button}
+            {typeof plan.button === 'string' ? plan.button : plan.button}
           </a>
         ) : (
-          <button className={`w-full font-bold py-3 px-6 rounded-full transition-all ${isSelected ? 'bg-magenta text-white' : 'bg-gray-200 text-gray-800'}`}>
+          <div className={`w-full font-bold py-3 px-6 rounded-full transition-all ${isSelected ? 'bg-magenta text-white' : 'bg-gray-200 text-gray-800'}`}>
             {plan.button}
-          </button>
+          </div>
         )}
       </div>
     </motion.div>
