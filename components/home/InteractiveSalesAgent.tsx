@@ -3,7 +3,7 @@
 import { useEffect, useState, ReactNode } from 'react';
 import { useAnimate } from 'framer-motion';
 import { FiShoppingCart } from 'react-icons/fi';
-import { cn } from '../../utils/cn.ts';
+import { cn } from '../../utils/cn';
 
 // Light theme color palette
 const USER_COLOR = 'bg-blue-500';

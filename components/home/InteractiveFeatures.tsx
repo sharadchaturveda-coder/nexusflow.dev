@@ -1,7 +1,7 @@
 import React, { useRef } from 'react';
 import { motion, useMotionValue, useSpring, useTransform } from 'framer-motion';
 import { InboxStackIcon, SparklesIcon, BoltIcon } from '@heroicons/react/24/solid';
-import { cn } from '../../utils/cn.ts';
+import { cn } from '../../utils/cn';
 
 const InteractiveFeatures = () => {
   return (
