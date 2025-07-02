@@ -16,7 +16,7 @@ const NavbarDesktop: React.FC<NavbarDesktopProps> = () => {
       {status === 'authenticated' ? (
         <>
           <Link href={status === 'authenticated' ? '/dashboard' : '/dashboard-preview'} className="hover:text-pink-600 transition-all">
-            Dashboard
+            CRM
           </Link>
           <Link href="/chat" className="hover:text-pink-600 transition-all">
             Chat

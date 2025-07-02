@@ -5,6 +5,7 @@ import useSWR from 'swr';
 import ProfileCard from '@/components/account/ProfileCard';
 import SubscriptionCard from '@/components/account/SubscriptionCard';
 import DangerZoneCard from '@/components/account/DangerZoneCard';
+import NotificationsCard from '@/components/account/NotificationsCard';
 import { getServerSideProps } from '@/lib/account/serverSideProps';
 import { useProTrialActivation } from '@/lib/hooks/useProTrialActivation';
 import { useAccountDeletion } from '@/lib/hooks/useAccountDeletion';
@@ -48,6 +49,7 @@ const AccountPage = () => {
           tokenLimit={userData.tokenLimit}
           onActivateProTrial={handleActivateProTrial}
         />
+        <NotificationsCard />
         <DangerZoneCard onDeleteAccount={handleDeleteAccount} />
       </div>
     </div>
