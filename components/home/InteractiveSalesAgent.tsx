@@ -117,7 +117,7 @@ export default function InteractiveSalesAgent() {
   const currentScenario = chatScenarios[scenarioIndex];
 
   return (
-    <div ref={scope} className="w-full max-w-md mx-auto h-[450px] bg-gradient-to-br from-white to-gray-100 rounded-2xl shadow-2xl p-4 flex flex-col space-y-4 border border-gray-200 overflow-hidden">
+    <div ref={scope} className="w-full max-w-md mx-auto bg-gradient-to-br from-white to-gray-100 rounded-2xl shadow-2xl p-4 flex flex-col space-y-4 border border-gray-200 overflow-hidden">
       <ChatBubble
         author="user"
         message={currentScenario.userMessage}
