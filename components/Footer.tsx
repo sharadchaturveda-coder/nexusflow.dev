@@ -1,6 +1,6 @@
 import React from 'react';
 import Link from 'next/link';
-import { FaLinkedin, FaTwitterSquare } from 'react-icons/fa';
+import { FaInstagram, FaFacebook, FaTwitterSquare } from 'react-icons/fa';
 
 const Footer: React.FC = () => {
   return (
@@ -94,11 +94,14 @@ const Footer: React.FC = () => {
         {/* Bottom Bar */}
         <div className="mt-12 pt-8 border-t border-gray-700 flex flex-col md:flex-row items-center justify-between text-sm text-gray-400">
           <div className="mb-4 md:mb-0">
-            © 2024 Nexus Flow AI, Inc. All rights reserved.
+            © 2025 Nexus Flow AI, Inc. All rights reserved.
           </div>
           <div className="flex space-x-6">
-            <Link href="#" aria-label="LinkedIn" className="hover:text-white transition-colors duration-200">
-              <FaLinkedin className="h-6 w-6" />
+            <Link href="#" aria-label="Instagram" className="hover:text-white transition-colors duration-200">
+              <FaInstagram className="h-6 w-6" />
+            </Link>
+            <Link href="#" aria-label="Facebook" className="hover:text-white transition-colors duration-200">
+              <FaFacebook className="h-6 w-6" />
             </Link>
             <Link href="#" aria-label="Twitter/X" className="hover:text-white transition-colors duration-200">
               <FaTwitterSquare className="h-6 w-6" />

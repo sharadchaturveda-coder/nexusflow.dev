@@ -40,6 +40,7 @@ module.exports = {
         scroll: 'scroll 20s linear infinite',
         marquee: 'marquee 60s linear infinite',
         'border-glow': 'borderGlow 2s infinite alternate', /* New animation for shimmering border */
+        'beam-rotate': 'beamRotate 30s linear infinite',
       },
       keyframes: {
         scroll: {
@@ -53,6 +54,10 @@ module.exports = {
         borderGlow: {
           '0%': { 'box-shadow': '0 0 5px rgba(255, 215, 0, 0.4)' },
           '100%': { 'box-shadow': '0 0 20px rgba(255, 215, 0, 0.8)' },
+        },
+        beamRotate: {
+          '0%': { transform: 'rotate(0deg)' },
+          '100%': { transform: 'rotate(360deg)' },
         },
       },
     },

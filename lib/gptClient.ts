@@ -2,7 +2,8 @@ import OpenAI from 'openai';
 import { ChatMessage } from '../types/chat';
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: undefined, // The local proxy handles authentication
+  baseURL: 'http://localhost:8000',
 });
 
 export async function getGPTResponse(

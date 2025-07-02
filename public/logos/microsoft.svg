@@ -1,0 +1,8 @@
+<svg width="120" height="60" viewBox="0 0 120 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+<rect width="120" height="60" fill="#F8F8F8"/>
+<path d="M29.5 29.5H20.5V20.5H29.5V29.5Z" fill="#F25022"/>
+<path d="M30.5 29.5H39.5V20.5H30.5V29.5Z" fill="#7FBA00"/>
+<path d="M29.5 30.5H20.5V39.5H29.5V30.5Z" fill="#00A4EF"/>
+<path d="M30.5 30.5H39.5V39.5H30.5V30.5Z" fill="#FFB900"/>
+<text x="45" y="35" font-family="Arial, sans-serif" font-size="20" fill="#2F2F2F">Microsoft</text>
+</svg>
