@@ -28,7 +28,7 @@ const Home: NextPage = () => {
       </Head>
 
       <Navbar />
-      <main className="pt-16"> {/* Added padding-top to account for sticky header */}
+      <main>
         <div id="home">
           <Hero />
         </div>
