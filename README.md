@@ -1,48 +1,46 @@
-# Nexus Flow AI: Automate & Enhance Communication
+# NexusFlow: AI-Powered Customer Engagement Platform
 
-This repository contains the full-stack Next.js application for Nexus Flow AI, an AI-powered service designed to automate and enhance communication and workflows for businesses and individuals.
+A comprehensive platform enhancing customer engagement through intelligent AI-driven solutions, streamlining support and sales processes.
 
-## Table of Contents
+## 🚀 Tech Stack
 
-*   [Setup](./docs/setup.md)
-*   [Architecture](./docs/architecture.md)
-*   [Pages](./docs/pages.md)
-*   [Components](./docs/components.md)
-*   [State Management](./docs/state.md)
-*   [Styling](./docs/styling.md)
-*   [Deployment](./docs/deployment.md)
-*   [Future Work](./docs/future-work.md)
-*   [Documentation Audit](./docs/AUDIT.md)
+- **Framework:** Next.js
+- **UI:** React, Tailwind CSS
+- **Language:** TypeScript
+- **Database/Auth:** Supabase
+- **Deployment:** Vercel
 
-## Quick Setup
+## 📚 Documentation
 
-1.  **Clone:** `git clone [repository-url] && cd nexusflow`
-2.  **Install:** `npm install` (or `yarn install`)
-3.  **Env Vars:** Create `.env.local` (see [Setup](./docs/setup.md) for details)
-4.  **Run Dev Server:** `npm run dev` (or `yarn dev`)
+- [Architecture Dossier](docs/architecture_dossier.md)
+- [Deployment Guide](docs/deployment.md)
+- [Component Library](docs/components.md)
+- [State Management](docs/state.md)
+- [Styling Guidelines](docs/styling.md)
+- [Future Work & Roadmap](docs/future-work.md)
 
-## Core Folder Layout
+## ⚡ Quick Setup
 
-*   `components/`: Reusable React components.
-*   `pages/`: Application pages and API routes.
-*   `lib/`: Helper functions and utility modules.
-*   `docs/`: Project documentation.
+1.  **Clone Repository:**
+    ```bash
+    git clone https://github.com/nexusflow/nexusflow.git
+    cd nexusflow
+    ```
+2.  **Install Dependencies:** `npm install`
+3.  **Run Development Server:** `npm run dev`
 
-## Tech Stack
+## 📂 Core Folder Layout
 
-*   **Framework:** Next.js 14.2.3
-*   **Styling:** Tailwind CSS 3.4.1
-*   **Animation:** Framer Motion
-*   **Database:** Supabase (via `lib/supabaseClient.ts`)
-*   **AI:** OpenAI API (via `lib/gptClient.ts`)
+- `pages/`: Routes & API.
+- `components/`: UI.
+- `lib/`: Logic & Integrations.
+- `docs/`: Documentation.
 
-## Deployment Pipeline
+## 🚢 Deployment
 
-The project is designed for seamless deployment to Vercel, integrating with GitHub for automatic builds and preview deployments on every push and pull request.
+Automated via Vercel on `main` branch pushes.
 
-## Known Issues / Roadmap
+## 🎯 Roadmap
 
-*   Migrate local JSON data storage to a robust database.
-*   Enhance error handling and logging.
-*   Implement comprehensive testing.
-*   See [Future Work](./docs/future-work.md) for more details.
+- [ ] Integrate advanced analytics dashboards.
+- [ ] Expand multi-channel messaging capabilities.

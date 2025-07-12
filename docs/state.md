@@ -1,35 +1,83 @@
 # State Management
 
-This document outlines the state management patterns used in the Nexus Flow AI application, primarily focusing on React's Context API and custom hooks.
+This document outlines the approaches to state management within the application.
 
-## Global State with React Context
+## Overview
 
-For application-wide state that needs to be accessible by many components without prop-drilling, React's Context API is utilized.
-
-*   **`lib/context/DashboardContext.tsx`**: This context is designed to provide dashboard-related data and functions to various components within the dashboard section of the application. It typically wraps the dashboard layout and makes data like usage statistics, metrics, and system status available to its children.
+The application primarily uses React's built-in state management features (useState, useContext) for local and shared component state. For more complex global state, Next.js's data fetching mechanisms and potentially a dedicated state management library (if introduced) are utilized.
 
 ## Local Component State
 
-For state that is specific to a single component or a small group of closely related components, React's `useState` and `useReducer` hooks are used.
+For state confined to a single component, `useState` is the primary hook.
 
-## Data Fetching and Caching with SWR (Implicit)
+```tsx
+import React, { useState } from 'react';
 
-While not explicitly defined as a global state management library, the presence of `swr` in `lib/hooks/useProTrialActivation.ts` suggests that SWR (Stale-While-Revalidate) is used for data fetching and caching. SWR is a React Hooks library for data fetching that handles caching, revalidation, focus tracking, and more, making it an effective solution for managing asynchronous data state.
+const Counter: React.FC = () => {
+  const [count, setCount] = useState(0);
 
-*   **`mutate` function**: Used to trigger re-fetching of data associated with a specific SWR key, ensuring UI updates after data modifications (e.g., after a successful API call).
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <button onClick={() => setCount(count + 1)}>Increment</button>
+    </div>
+  );
+};
 
-## Custom Hooks for Encapsulated Logic
+export default Counter;
+```
 
-Many custom hooks (found in `lib/hooks/`) encapsulate stateful logic and side effects, making them reusable across different components and promoting a cleaner separation of concerns. These hooks often manage their own internal state and expose relevant data and functions.
+## Shared State with Context API
 
-Examples:
+For state that needs to be shared across multiple components without prop drilling, React's Context API is used. This is suitable for themes, user authentication status, or other global configurations.
 
-*   **`lib/hooks/useAuthStatus.ts`**: Manages authentication state, often interacting with `next-auth`.
-*   **`lib/hooks/useChatLogic.ts`**: Encapsulates the logic for sending messages, managing conversation history, and interacting with the chat API.
-*   **`lib/hooks/useDashboardData.ts`**: Aggregates data fetching for various dashboard sections, managing loading and error states.
-*   **`lib/hooks/useUsageData.ts`**: Fetches and manages user usage logs and subscription details.
-*   **`lib/hooks/useSystemStatus.ts`**: Fetches and manages the status of external services like OpenAI.
+```tsx
+// Example: lib/context/AuthContext.tsx
+import React, { createContext, useContext, useState, ReactNode } from 'react';
 
-## State Persistence
+interface AuthContextType {
+  isAuthenticated: boolean;
+  user: any | null; // Replace 'any' with actual user type
+  login: (userData: any) => void;
+  logout: () => void;
+}
 
-For persistent state, especially user-specific data, the application interacts with backend API routes which then store data in Supabase (as indicated by `lib/supabaseClient.ts`) or local JSON files (`data/`). Client-side state is generally not persisted across sessions unless explicitly handled (e.g., via local storage, though not a primary pattern here).
+const AuthContext = createContext<AuthContextType | undefined>(undefined);
+
+export const AuthProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState(null);
+
+  const login = (userData: any) => {
+    setIsAuthenticated(true);
+    setUser(userData);
+  };
+
+  const logout = () => {
+    setIsAuthenticated(false);
+    setUser(null);
+  };
+
+  return (
+    <AuthContext.Provider value={{ isAuthenticated, user, login, logout }}>
+      {children}
+    </AuthContext.Provider>
+  );
+};
+
+export const useAuth = () => {
+  const context = useContext(AuthContext);
+  if (!context) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
+  return context;
+};
+```
+
+## Data Fetching and Server-Side State
+
+Next.js provides `getServerSideProps` and `getStaticProps` for fetching data and pre-rendering pages. This data is passed as props to the page components and can be considered initial server-side state.
+
+## Global State Considerations
+
+For more complex global state management patterns (e.g., caching API responses, managing complex forms), a dedicated library like SWR, React Query, or Redux Toolkit might be considered in the future, but are not currently the primary approach.

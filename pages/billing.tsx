@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import useSWR from 'swr';
-import { useAuthStatus } from '../lib/hooks/useAuthStatus';
-import BillingLayout from '../components/billing/BillingLayout';
-import PlanCard from '../components/billing/PlanCard';
-import UsageMeter from '../components/billing/UsageMeter';
-import BillingHistoryTable from '../components/billing/BillingHistoryTable';
-import loadRazorpayScript from '../lib/razorpay/loadRazorpayScript';
+import { useAuthStatus } from '../lib/hooks/useAuthStatus.ts';
+import BillingLayout from '../components/billing/BillingLayout.tsx';
+import PlanCard from '../components/billing/PlanCard.tsx';
+import UsageMeter from '../components/billing/UsageMeter.tsx';
+import BillingHistoryTable from '../components/billing/BillingHistoryTable.tsx';
+import loadRazorpayScript from '../lib/razorpay/loadRazorpayScript.ts';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
@@ -166,8 +166,14 @@ const BillingPage: React.FC = () => {
     <BillingLayout title="Billing" description="Manage your subscription and view billing history.">
       <div className="space-y-8">
         <PlanCard
-          planName={subscription?.planName || 'Free'}
-          description={subscription?.description || 'Your current plan details.'}
+          plan={{
+            id: subscription?.planId || 'free',
+            name: subscription?.planName || 'Free',
+            price: 'N/A', // Placeholder, as price might not be directly available here
+            keyLimit: 'N/A', // Placeholder
+            features: [], // Placeholder
+            button: 'Manage Subscription', // Placeholder
+          }}
         />
 
         {nextBillingDate && (

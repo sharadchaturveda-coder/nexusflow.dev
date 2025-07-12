@@ -1,38 +1,55 @@
 # Pages
 
-This document describes the routing scheme, dynamic routes, and responsibilities of key pages within the Nexus Flow AI application.
+This document describes the structure and purpose of the main pages within the application, located in the `pages/` directory.
 
-## Routing Scheme
+## Overview
 
-The application uses Next.js's file-system based routing. Each file in the `pages/` directory corresponds to a route.
+Next.js pages are React components exported from files in the `pages/` directory. Each file typically corresponds to a route in the application.
 
-*   `pages/index.tsx`: The main landing page.
-*   `pages/chat.tsx`: The primary chat interface for AI interactions.
-*   `pages/dashboard/index.tsx`: The main user dashboard.
-*   `pages/dashboard/usage.tsx`: Detailed usage statistics page within the dashboard.
-*   `pages/account.tsx`: User account settings.
-*   `pages/billing.tsx`: Billing and subscription management.
-*   `pages/pricing.tsx`: Displays pricing plans.
-*   `pages/help.tsx`: Help and FAQ section.
+## Common Page Structure
 
-## Dynamic Routes
+A typical page component might include:
 
-Next.js supports dynamic routes by using bracket syntax in filenames.
+*   **Imports:** React, Next.js specific components (e.g., `Head`), and custom components.
+*   **`getServerSideProps` or `getStaticProps` (Optional):** Functions for data fetching at build time or request time.
+*   **Page Component:** The default exported React component for the page.
 
-*   `pages/api/admin/users/[id]/lock.ts`: An example of a dynamic API route to lock a specific user by their ID.
+```tsx
+// Example: pages/dashboard/index.tsx
+import { GetServerSideProps } from 'next';
+import DashboardLayout from '../../components/dashboard/DashboardLayout';
+import DashboardContent from '../../components/dashboard/DashboardContent';
+// ... other imports
 
-## Page Responsibilities
+interface DashboardPageProps {
+  // ... props interface
+}
 
-Each page component is responsible for:
+const DashboardPage: React.FC<DashboardPageProps> = (props) => {
+  return (
+    <DashboardLayout>
+      <DashboardContent {...props} />
+    </DashboardLayout>
+  );
+};
 
-*   **Layout Orchestration**: Arranging and rendering child components to form the complete page view.
-*   **Data Fetching**: Initiating data fetching from API routes or external services, often using `getServerSideProps` or client-side hooks.
-*   **State Management**: Managing page-specific state and interacting with global state (e.g., via React Context or custom hooks).
-*   **User Interaction**: Handling user input and navigation.
+export const getServerSideProps: GetServerSideProps = async (context) => {
+  // ... data fetching logic
+  return {
+    props: {
+      // ... fetched data
+    },
+  };
+};
 
-### Key Page Details
+export default DashboardPage;
+```
 
-*   **`pages/index.tsx`**: Orchestrates the landing page, integrating various marketing and feature components (`Hero`, `HowItWorks`, `Pricing`, `FAQ`, `CTA`).
-*   **`pages/chat.tsx`**: Manages the chat UI, including displaying messages, handling user input, and integrating with the AI message relay API. It uses `ChatPageLayout` for consistent styling.
-*   **`pages/dashboard/index.tsx`**: The central hub for authenticated users, displaying key metrics, recent activity, and system status. It fetches data from various `/api/dashboard` endpoints.
-*   **`pages/api/*`**: These are Next.js API routes, functioning as serverless backend endpoints. They handle business logic, database interactions (via Supabase client), and external API calls (e.g., OpenAI).
+## Key Pages
+
+*   **`pages/index.tsx`:** The main landing page of the application.
+*   **`pages/dashboard/index.tsx`:** The user's main dashboard, displaying key metrics and activity.
+*   **`pages/chat.tsx`:** The primary interface for AI chat interactions.
+*   **`pages/account.tsx`:** User account settings and profile management.
+*   **`pages/billing.tsx`:** Billing information and subscription management.
+*   **`pages/api/...`:** API routes that handle backend logic and data interactions. These are not rendered as UI pages but serve as backend endpoints.

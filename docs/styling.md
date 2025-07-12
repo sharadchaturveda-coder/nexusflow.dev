@@ -1,51 +1,72 @@
 # Styling
 
-This document details the styling conventions, Tailwind CSS usage, responsive breakpoints, and theming approach within the Nexus Flow AI application.
+This document describes the styling methodologies used within the project.
 
-## Tailwind CSS Usage
+## Overview
 
-The project exclusively uses **Tailwind CSS** for all styling. Tailwind is a utility-first CSS framework that allows for rapid UI development by composing classes directly in markup.
+The project primarily uses Tailwind CSS for utility-first styling, complemented by CSS Modules for component-specific styles when necessary.
+
+## Tailwind CSS
+
+Tailwind CSS is the main approach for styling. It provides a set of utility classes that can be composed directly in JSX to build designs.
 
 ### Configuration
 
-The primary configuration for Tailwind CSS is located in [`tailwind.config.js`](tailwind.config.js). This file extends Tailwind's default configuration with custom values relevant to the project's design system.
+Tailwind CSS is configured via `tailwind.config.js` and `postcss.config.js`. Customizations for themes, colors, spacing, etc., are defined in `tailwind.config.js`.
 
-Key customizations include:
+### Usage
 
-*   **`content`**: Specifies files where Tailwind should look for classes to generate the final CSS.
-*   **`theme.extend.colors`**: Defines custom color palettes, such as:
-    *   `eggshell`: `#F9F6F2`
-    *   `opal-white`: `#F8F8F8`
-    *   `gold`: A range of gold shades (`DEFAULT`, `light`, `dark`, `accent`).
-    *   `blush`: `#fef2f2`
-    *   `purple-dark`: `#6A0DAD`
-    *   `purple-light`: `#8A2BE2`
-*   **`theme.extend.height`**: Custom height utilities, e.g., `navbar: '64px'`.
-*   **`theme.extend.boxShadow`**: Custom shadow styles, e.g., `soft-lg`, `glow-gold`.
-*   **`theme.extend.backgroundImage`**: Custom linear gradients, e.g., `orange-fade`, `orange-gradient`, `purple-gradient`.
-*   **`theme.extend.keyframes`**: Custom CSS keyframe animations.
-*   **`theme.extend.animation`**: Custom animation utilities that use the defined keyframes.
+Apply Tailwind classes directly to HTML elements or React components:
 
-## Responsive Breakpoints
+```tsx
+<div className="flex items-center justify-center min-h-screen bg-gray-100">
+  <h1 className="text-3xl font-bold text-blue-600">Hello, Tailwind!</h1>
+</div>
+```
 
-Tailwind CSS provides a mobile-first approach to responsive design. Default breakpoints are used, which are:
+## CSS Modules
 
-*   `sm`: 640px
-*   `md`: 768px
-*   `lg`: 1024px
-*   `xl`: 1280px
-*   `2xl`: 1536px
+For styles that are highly specific to a component and need to avoid global scope conflicts, CSS Modules are used. These are typically found in `styles/` or alongside components.
 
-These breakpoints are applied using utility class prefixes (e.g., `md:text-lg`, `lg:flex`). Components are designed to be fluid and adapt to different screen sizes by leveraging these responsive utilities.
+### Usage
 
-## Theming
+1.  Create a CSS file with the `.module.css` extension (e.g., `styles/Button.module.css`).
+    ```css
+    /* styles/Button.module.css */
+    .button {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 5px;
+      background-color: #007bff;
+      color: white;
+      cursor: pointer;
+    }
 
-The application's visual theme is primarily driven by the custom color palette defined in `tailwind.config.js`.
+    .button:hover {
+      background-color: #0056b3;
+    }
+    ```
 
-*   **Color Palette**: The "candy-colored gradients" and "layered glassmorphism" mentioned in the project overview are achieved through the combination of custom colors and background image gradients.
-*   **Consistent Look**: By centralizing color definitions and using Tailwind utilities, a consistent visual language is maintained across all components.
-*   **Interactive Effects**: Interactive shimmer effects and floating visual artifacts are implemented using a combination of Tailwind's utility classes, custom animations (defined in `tailwind.config.js`), and potentially Framer Motion for more complex orchestrations.
+2.  Import the module into your React component:
+    ```tsx
+    import React from 'react';
+    import styles from '../styles/Button.module.css';
+
+    const MyButton: React.FC = () => {
+      return (
+        <button className={styles.button}>
+          Click Me
+        </button>
+      );
+    };
+
+    export default MyButton;
+    ```
 
 ## Global Styles
 
-Global styles are defined in [`styles/globals.css`](styles/globals.css). This file typically includes base styles, font imports (e.g., Poppins from Google Fonts as seen in `pages/_document.tsx`), and any CSS resets or custom CSS that cannot be easily expressed with Tailwind utility classes.
+Global styles, such as base typography or resets, are defined in `styles/globals.css` and imported into `pages/_app.tsx`.
+
+## Iconography
+
+(Placeholder for icon library usage, e.g., React Icons, Font Awesome)

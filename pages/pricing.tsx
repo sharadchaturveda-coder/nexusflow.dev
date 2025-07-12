@@ -3,8 +3,9 @@ import PricingCard from '../components/home/PricingCard';
 import UpgradeButton from '../components/UpgradeButton';
 import { plans } from '../lib/pricing/planData';
 import Navbar from '../components/Navbar';
-import Head from 'next/head';
 import { TestimonialCard } from '../components/home/Testimonials'; // Re-using the TestimonialCard component
+import SeoHead from '../components/SeoHead';
+import PlanCard from '../components/billing/PlanCard';
 
 export default function PricingPage() {
   const [isYearly, setIsYearly] = useState(false);
@@ -16,11 +17,10 @@ export default function PricingPage() {
 
   return (
     <div className="bg-cream text-gray-800 font-sans">
-      <Head>
-        <title>Nexus Flow AI - Simple, Transparent Pricing</title>
-        <meta name="description" content="Choose the plan that's right for your business." />
-        <link rel="icon" href="/favicon.ico" />
-      </Head>
+      <SeoHead
+        title="Nexus Flow AI - Simple, Transparent Pricing"
+        description="Choose the plan that's right for your business."
+      />
       <Navbar />
       <section className="py-20 px-4 bg-cream">
         <div className="max-w-4xl mx-auto text-center mb-12">
@@ -32,7 +32,7 @@ export default function PricingPage() {
           </p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 max-w-7xl mx-auto">
-          {plans.map((plan) => (
+          {plans.map((plan: any) => (
             <PricingCard
               key={plan.id}
               plan={plan}
@@ -49,7 +49,7 @@ export default function PricingPage() {
             <h3 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
               What Our Customers Say
             </h3>
-            <p className="text-lg text-gray-700 mx-auto whitespace-nowrap">
+            <p className="text-lg text-gray-700 mx-auto">
               Hear from businesses who are already seeing results with Nexus Flow AI.
             </p>
           </div>
@@ -66,8 +66,8 @@ export default function PricingPage() {
           </div>
         </section>
 
-        {/* Compare All Features Table */}
-        <section className="py-16 px-4 bg-white">
+        {/* Compare All Features Table - Hidden on mobile, visible on desktop */}
+        <section className="py-16 px-4 bg-white max-w-7xl mx-auto hidden md:block">
           <div className="max-w-4xl mx-auto text-center mb-12">
             <h3 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
               Compare All Features
@@ -76,97 +76,119 @@ export default function PricingPage() {
               A detailed breakdown of what each plan offers.
             </p>
           </div>
-          <div className="overflow-x-auto">
-            <table className="min-w-full bg-white border border-gray-200 rounded-lg shadow-lg">
+          <div className="max-w-7xl mx-auto">
+            <div className="w-full block">
+              <table className="w-full bg-white border border-gray-200 rounded-lg shadow-lg table-fixed">
               <thead>
                 <tr className="bg-gray-100 border-b border-gray-200">
-                  <th className="py-3 px-6 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider">Feature</th>
-                  <th className="py-3 px-6 text-center text-sm font-semibold text-gray-600 uppercase tracking-wider">Starter</th>
-                  <th className="py-3 px-6 text-center text-sm font-semibold text-gray-600 uppercase tracking-wider">Pro</th>
-                  <th className="py-3 px-6 text-center text-sm font-semibold text-gray-600 uppercase tracking-wider">Business</th>
-                  <th className="py-3 px-6 text-center text-sm font-semibold text-gray-600 uppercase tracking-wider">Enterprise</th>
+                  <th className="py-3 px-1 text-left text-sm font-semibold text-gray-600 uppercase tracking-wider whitespace-nowrap sm:px-6 w-1/5">Feature</th>
+                  <th className="py-3 px-1 text-center text-sm font-semibold text-gray-600 uppercase tracking-wider whitespace-nowrap sm:px-6 w-1/5">Starter</th>
+                  <th className="py-3 px-1 text-center text-sm font-semibold text-gray-600 uppercase tracking-wider whitespace-nowrap sm:px-6 w-1/5">Pro</th>
+                  <th className="py-3 px-1 text-center text-sm font-semibold text-gray-600 uppercase tracking-wider whitespace-nowrap sm:px-6 w-1/5">Business</th>
+                  <th className="py-3 px-1 text-center text-sm font-semibold text-gray-600 uppercase tracking-wider whitespace-nowrap sm:px-6 w-1/5">Enterprise</th>
                 </tr>
               </thead>
               <tbody>
                 <tr className="border-b border-gray-100">
-                  <td className="py-4 px-6 text-sm text-gray-800">AI Conversations / mo</td>
-                  <td className="py-4 px-6 text-center text-sm text-gray-800">50</td>
-                  <td className="py-4 px-6 text-center text-sm text-gray-800">500</td>
-                  <td className="py-4 px-6 text-center text-sm text-gray-800">1,500</td>
-                  <td className="py-4 px-6 text-center text-sm text-gray-800">Custom</td>
+                  <td className="py-4 px-1 text-sm text-gray-800 whitespace-nowrap sm:px-6">AI Conversations / mo</td>
+                  <td className="py-4 px-1 text-center text-sm text-gray-800 whitespace-nowrap sm:px-6">50</td>
+                  <td className="py-4 px-1 text-center text-sm text-gray-800 whitespace-nowrap sm:px-6">500</td>
+                  <td className="py-4 px-1 text-center text-sm text-gray-800 whitespace-nowrap sm:px-6">1,500</td>
+                  <td className="py-4 px-1 text-center text-sm text-gray-800 whitespace-nowrap sm:px-6">Custom</td>
                 </tr>
                 <tr className="border-b border-gray-100">
-                  <td className="py-4 px-6 text-sm text-gray-800">Standard AI Model</td>
-                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
-                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
-                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
-                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                  <td className="py-4 px-1 text-sm text-gray-800 whitespace-nowrap sm:px-6">Standard AI Model</td>
+                  <td className="py-4 px-1 text-center text-sm text-green-500 whitespace-nowrap sm:px-6">✔</td>
+                  <td className="py-4 px-1 text-center text-sm text-green-500 whitespace-nowrap sm:px-6">✔</td>
+                  <td className="py-4 px-1 text-center text-sm text-green-500 whitespace-nowrap sm:px-6">✔</td>
+                  <td className="py-4 px-1 text-center text-sm text-green-500 whitespace-nowrap sm:px-6">✔</td>
                 </tr>
                 <tr className="border-b border-gray-100">
-                  <td className="py-4 px-6 text-sm text-gray-800">Chat History</td>
-                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
-                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
-                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
-                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                  <td className="py-4 px-1 text-sm text-gray-800 whitespace-nowrap sm:px-6">Chat History</td>
+                  <td className="py-4 px-1 text-center text-sm text-green-500 whitespace-nowrap sm:px-6">✔</td>
+                  <td className="py-4 px-1 text-center text-sm text-green-500 whitespace-nowrap sm:px-6">✔</td>
+                  <td className="py-4 px-1 text-center text-sm text-green-500 whitespace-nowrap sm:px-6">✔</td>
+                  <td className="py-4 px-1 text-center text-sm text-green-500 whitespace-nowrap sm:px-6">✔</td>
                 </tr>
                 <tr className="border-b border-gray-100">
-                  <td className="py-4 px-6 text-sm text-gray-800">Train AI on Your Own Data (URLs, PDFs)</td>
-                  <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
-                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
-                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
-                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                  <td className="py-4 px-1 text-sm text-gray-800 whitespace-nowrap sm:px-6">Train AI on Your Own Data (URLs, PDFs)</td>
+                  <td className="py-4 px-1 text-center text-sm text-gray-800 whitespace-nowrap sm:px-6"></td>
+                  <td className="py-4 px-1 text-center text-sm text-green-500 whitespace-nowrap sm:px-6">✔</td>
+                  <td className="py-4 px-1 text-center text-sm text-green-500 whitespace-nowrap sm:px-6">✔</td>
+                  <td className="py-4 px-1 text-center text-sm text-green-500 whitespace-nowrap sm:px-6">✔</td>
                 </tr>
                 <tr className="border-b border-gray-100">
-                  <td className="py-4 px-6 text-sm text-gray-800">Advanced AI Model (GPT-4)</td>
-                  <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
-                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
-                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
-                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                  <td className="py-4 px-1 text-sm text-gray-800 whitespace-nowrap sm:px-6">Advanced AI Model (GPT-4)</td>
+                  <td className="py-4 px-1 text-center text-sm text-gray-800 whitespace-nowrap sm:px-6"></td>
+                  <td className="py-4 px-1 text-center text-sm text-green-500 whitespace-nowrap sm:px-6">✔</td>
+                  <td className="py-4 px-1 text-center text-sm text-green-500 whitespace-nowrap sm:px-6">✔</td>
+                  <td className="py-4 px-1 text-center text-sm text-green-500 whitespace-nowrap sm:px-6">✔</td>
                 </tr>
                 <tr className="border-b border-gray-100">
-                  <td className="py-4 px-6 text-sm text-gray-800">Priority Support</td>
-                  <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
-                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
-                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
-                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                  <td className="py-4 px-1 text-sm text-gray-800 whitespace-nowrap sm:px-6">Priority Support</td>
+                  <td className="py-4 px-1 text-center text-sm text-gray-800 whitespace-nowrap sm:px-6"></td>
+                  <td className="py-4 px-1 text-center text-sm text-green-500 whitespace-nowrap sm:px-6">✔</td>
+                  <td className="py-4 px-1 text-center text-sm text-green-500 whitespace-nowrap sm:px-6">✔</td>
+                  <td className="py-4 px-1 text-center text-sm text-green-500 whitespace-nowrap sm:px-6">✔</td>
                 </tr>
                 <tr className="border-b border-gray-100">
-                  <td className="py-4 px-6 text-sm text-gray-800">Team Collaboration (3 seats)</td>
-                  <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
-                  <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
-                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
-                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                  <td className="py-4 px-1 text-sm text-gray-800 whitespace-nowrap sm:px-6">Team Collaboration (3 seats)</td>
+                  <td className="py-4 px-1 text-center text-sm text-gray-800 whitespace-nowrap sm:px-6"></td>
+                  <td className="py-4 px-1 text-center text-sm text-gray-800 whitespace-nowrap sm:px-6"></td>
+                  <td className="py-4 px-1 text-center text-sm text-green-500 whitespace-nowrap sm:px-6">✔</td>
+                  <td className="py-4 px-1 text-center text-sm text-green-500 whitespace-nowrap sm:px-6">✔</td>
                 </tr>
                 <tr className="border-b border-gray-100">
-                  <td className="py-4 px-6 text-sm text-gray-800">Advanced Analytics</td>
-                  <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
-                  <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
-                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
-                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                  <td className="py-4 px-1 text-sm text-gray-800 whitespace-nowrap sm:px-6">Advanced Analytics</td>
+                  <td className="py-4 px-1 text-center text-sm text-gray-800 whitespace-nowrap sm:px-6"></td>
+                  <td className="py-4 px-1 text-center text-sm text-gray-800 whitespace-nowrap sm:px-6"></td>
+                  <td className="py-4 px-1 text-center text-sm text-green-500 whitespace-nowrap sm:px-6">✔</td>
+                  <td className="py-4 px-1 text-center text-sm text-green-500 whitespace-nowrap sm:px-6">✔</td>
                 </tr>
                 <tr className="border-b border-gray-100">
-                  <td className="py-4 px-6 text-sm text-gray-800">SOC 2 Compliance</td>
-                  <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
-                  <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
-                  <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
-                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                  <td className="py-4 px-1 text-sm text-gray-800 whitespace-nowrap sm:px-6">SOC 2 Compliance</td>
+                  <td className="py-4 px-1 text-center text-sm text-gray-800 whitespace-nowrap sm:px-6"></td>
+                  <td className="py-4 px-1 text-center text-sm text-gray-800 whitespace-nowrap sm:px-6"></td>
+                  <td className="py-4 px-1 text-center text-sm text-gray-800 whitespace-nowrap sm:px-6"></td>
+                  <td className="py-4 px-1 text-center text-sm text-green-500 whitespace-nowrap sm:px-6">✔</td>
                 </tr>
                 <tr className="border-b border-gray-100">
-                  <td className="py-4 px-6 text-sm text-gray-800">Dedicated Account Manager</td>
-                  <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
-                  <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
-                  <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
-                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                  <td className="py-4 px-1 text-sm text-gray-800 whitespace-nowrap sm:px-6">Dedicated Account Manager</td>
+                  <td className="py-4 px-1 text-center text-sm text-gray-800 whitespace-nowrap sm:px-6"></td>
+                  <td className="py-4 px-1 text-center text-sm text-gray-800 whitespace-nowrap sm:px-6"></td>
+                  <td className="py-4 px-1 text-center text-sm text-gray-800 whitespace-nowrap sm:px-6"></td>
+                  <td className="py-4 px-1 text-center text-sm text-green-500 whitespace-nowrap sm:px-6">✔</td>
                 </tr>
                 <tr>
-                  <td className="py-4 px-6 text-sm text-gray-800">Custom Integrations</td>
-                  <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
-                  <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
-                  <td className="py-4 px-6 text-center text-sm text-gray-800"></td>
-                  <td className="py-4 px-6 text-center text-sm text-green-500">✔</td>
+                  <td className="py-4 px-1 text-sm text-gray-800 whitespace-nowrap sm:px-6">Custom Integrations</td>
+                  <td className="py-4 px-1 text-center text-sm text-gray-800 whitespace-nowrap sm:px-6"></td>
+                  <td className="py-4 px-1 text-center text-sm text-gray-800 whitespace-nowrap sm:px-6"></td>
+                  <td className="py-4 px-1 text-center text-sm text-gray-800 whitespace-nowrap sm:px-6"></td>
+                  <td className="py-4 px-1 text-center text-sm text-green-500 whitespace-nowrap sm:px-6">✔</td>
                 </tr>
               </tbody>
             </table>
+            </div>
+          </div>
+        </section>
+
+        {/* Plan Cards for Mobile - Visible on mobile, hidden on desktop */}
+        <section className="py-16 px-4 bg-white hidden">
+          <div className="max-w-4xl mx-auto text-center mb-12">
+            <h3 className="text-3xl md:text-4xl font-extrabold text-gray-900 mb-4">
+              Choose Your Plan
+            </h3>
+            <p className="text-lg text-gray-700 max-w-xl mx-auto">
+              A summary of what each plan offers.
+            </p>
+          </div>
+          <div className="space-y-8 max-w-md mx-auto"> {/* Stacked cards for mobile */}
+            {plans.map((plan: any) => (
+              <PlanCard
+                key={plan.id}
+                plan={plan} // Pass the entire plan object
+              />
+            ))}
           </div>
         </section>
 

@@ -1,6 +1,6 @@
 import { motion } from 'framer-motion';
 
-interface Plan {
+export interface Plan {
   id: string;
   name: string;
   price: string;
@@ -25,8 +25,8 @@ export default function PricingCard({ plan, isSelected, onSelect }: PricingCardP
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ delay: 0.1, duration: 0.2, ease: "easeOut" }}
       whileHover={{ scale: 1.02, boxShadow: '0 10px 20px rgba(0,0,0,0.1)', transition: { duration: 0.15, ease: "easeOut" } }}
-      className={`p-8 rounded-2xl shadow-lg flex flex-col cursor-pointer transition-all ${
-        isSelected ? 'border-2 border-magenta shadow-2xl' : 'border border-gray-200'
+      className={`p-8 rounded-2xl shadow-lg flex flex-col cursor-pointer transition-all min-w-0 ${
+        isSelected ? 'border-2 border-[#e91e63] shadow-2xl' : 'border border-gray-200'
       } ${plan.popular ? 'bg-gradient-to-br from-orange-100 to-pink-100' : 'bg-white'}`}
       onClick={() => onSelect(plan.id)}
     >

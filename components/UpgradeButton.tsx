@@ -1,11 +1,22 @@
 // components/UpgradeButton.tsx
 import { useSession } from 'next-auth/react';
 
-export default function UpgradeButton() {
+interface UpgradeButtonProps {
+  planId: string;
+  buttonText: string;
+}
+
+export default function UpgradeButton({ planId, buttonText }: UpgradeButtonProps) {
   const { data: session } = useSession();
 
   const handlePayment = async () => {
-    const res = await fetch('/api/payments/create-order', { method: 'POST' });
+    const res = await fetch('/api/payments/create-order', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ planId }), // Pass planId to the API
+    });
     const order = await res.json();
 
     const options = {
@@ -13,7 +24,7 @@ export default function UpgradeButton() {
       amount: order.amount,
       currency: order.currency,
       name: "Nexus Flow AI",
-      description: "Pro Plan Subscription",
+      description: `${planId} Plan Subscription`, // Dynamic description
       order_id: order.id,
       handler: function (response: any) { // Explicitly type response
         // Here you can verify the payment on the client side if needed,
@@ -25,6 +36,7 @@ export default function UpgradeButton() {
       },
       notes: {
         user_id: session?.user?.id, // CRITICAL: Pass user ID to webhook
+        plan_id: planId, // Pass planId to webhook
       },
       theme: {
         color: "#3399cc"
@@ -35,5 +47,12 @@ export default function UpgradeButton() {
     rzp.open();
   };
 
-  return <button onClick={handlePayment}>Upgrade to Pro</button>;
+  return (
+    <button
+      onClick={handlePayment}
+      className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded w-full"
+    >
+      {buttonText}
+    </button>
+  );
 }

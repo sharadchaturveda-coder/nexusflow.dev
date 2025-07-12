@@ -1,7 +1,8 @@
 import { useState } from 'react';
-import PricingCard from './PricingCard';
-import UpgradeButton from '../UpgradeButton';
-import { plans } from '@/lib/pricing/planData';
+import PricingCard from './PricingCard.tsx';
+import type { Plan } from './PricingCard.tsx';
+import UpgradeButton from '../UpgradeButton.tsx';
+import { plans } from '../../lib/pricing/planData.ts';
 
 export default function Pricing() {
   const [isYearly, setIsYearly] = useState(false);
@@ -29,13 +30,13 @@ export default function Pricing() {
         </label>
         <span className="ml-4 font-bold text-gray-800">Yearly (Save 10%)</span>
       </div>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 max-w-7xl mx-auto">
-        {plans.map((plan) => (
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 max-w-full mx-auto">
+        {plans.map((plan: Plan) => (
           <PricingCard
             key={plan.id}
             plan={{
               ...plan,
-              button: plan.id === 'free' ? <UpgradeButton /> : null,
+              button: plan.id === 'free' ? <UpgradeButton planId={plan.id} buttonText="Get Started" /> : null,
             }}
             isYearly={isYearly}
             isSelected={selectedPlan === plan.id}

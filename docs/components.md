@@ -1,29 +1,51 @@
 # Components
 
-This document describes the component hierarchy, styling conventions, and key reusable components within the Nexus Flow AI application.
+This document details the organization and usage of React components within the project, located in the `components/` directory.
 
-## Component Hierarchy
+## Overview
 
-Components are organized primarily within the `components/` directory, often grouped by their functional area (e.g., `components/home/`, `components/dashboard/`).
+Components are reusable UI building blocks. They are organized into logical subdirectories based on their functionality or the page they primarily serve.
 
-*   **Layout Components**: Provide structural wrappers for pages (e.g., `components/Navbar.tsx`, `components/chat/ChatPageLayout.tsx`).
-*   **UI Elements**: Reusable, atomic UI elements (e.g., `components/AccordionItem.tsx`, `components/UpgradeButton.tsx`).
-*   **Feature-Specific Components**: Components that make up distinct sections or features of a page (e.g., `components/home/Hero.tsx`, `components/dashboard/UsageChart.tsx`).
+## Component Structure
 
-## Styling Conventions
+*   **Functional Components:** Most components are functional components using React Hooks.
+*   **Props:** Components receive data and functions via props.
+*   **Styling:** Styling is typically handled using Tailwind CSS classes directly within the JSX, or through CSS Modules for more complex, scoped styles.
 
-The project uses **Tailwind CSS** for all styling, providing a utility-first CSS framework.
+```tsx
+// Example: components/Button.tsx
+import React from 'react';
 
-*   **Configuration**: The main Tailwind configuration is in `tailwind.config.js`, where custom colors, spacing, shadows, and animations are defined.
-*   **Responsive Design**: Tailwind's responsive utility classes are used to ensure a mobile-first and adaptive design across various screen sizes. Breakpoints are handled by Tailwind's default configuration unless overridden.
-*   **Theming**: The primary theming is achieved through Tailwind's color palette, with custom colors like `eggshell`, `opal-white`, `gold`, `blush`, and various gradients defined in `tailwind.config.js`.
-*   **Animations**: **Framer Motion** is used for all animations, providing declarative and performant motion for UI elements. Animations are often applied directly to components using `motion.div`, `motion.span`, etc.
+interface ButtonProps {
+  onClick: () => void;
+  children: React.ReactNode;
+  variant?: 'primary' | 'secondary';
+}
 
-## Key Reusable Components
+const Button: React.FC<ButtonProps> = ({ onClick, children, variant = 'primary' }) => {
+  const baseStyle = 'px-4 py-2 rounded-md font-semibold';
+  const variantStyle = variant === 'primary' ? 'bg-blue-500 text-white' : 'bg-gray-200 text-gray-800';
 
-*   **`components/Navbar.tsx`**: The main navigation bar, adapting for desktop and mobile views (`NavbarDesktop.tsx`, `NavbarMobile.tsx`). It dynamically renders authentication-related buttons based on user session status.
-*   **`components/home/*.tsx`**: A collection of components forming the landing page sections (e.g., `Hero`, `HowItWorks`, `Pricing`, `FAQ`, `Testimonials`).
-*   **`components/InfiniteBusinessScroll.tsx`**: Creates an infinitely looping marquee effect for displaying business cards or logos.
-*   **`components/RateSlider.tsx`**: An interactive component allowing users to estimate monthly costs based on AI usage.
-*   **`components/dashboard/*.tsx`**: Components specific to the user dashboard, such as `HeroMetricCard`, `UsageChart`, `SystemStatusWidget`, and `QuotaProgressBar`. These are designed to be data-agnostic and receive data via props.
-*   **`components/SeoHead.tsx`**: A utility component for managing SEO-related `<head>` tags, ensuring consistent metadata across pages.
+  return (
+    <button className={`${baseStyle} ${variantStyle}`} onClick={onClick}>
+      {children}
+    </button>
+  );
+};
+
+export default Button;
+```
+
+## Directory Structure Examples
+
+*   **`components/ui/`:** Generic, highly reusable UI components (e.g., `Button`, `Modal`, `Input`).
+*   **`components/dashboard/`:** Components specific to the dashboard section (e.g., `UsageChart`, `RecentActivityFeed`).
+*   **`components/auth/`:** Components related to authentication (e.g., `AuthButtons`).
+*   **`components/home/`:** Components used on the marketing/home page.
+
+## Best Practices
+
+*   **Modularity:** Keep components small and focused on a single responsibility.
+*   **Reusability:** Design components to be reusable across different parts of the application.
+*   **Prop Drilling vs. Context:** Use props for simple data passing. Consider React Context or state management libraries for global state or deeply nested data.
+*   **Accessibility:** Ensure components are built with accessibility in mind (e.g., proper ARIA attributes, keyboard navigation).

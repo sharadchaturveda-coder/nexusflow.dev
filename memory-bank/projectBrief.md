@@ -59,6 +59,10 @@ Project Name: Nexus Flow AI. Goals: Automate and enhance communication and workf
 ## Tech Stack & Architecture
 Framework: Next.js 14.2.3 (Full-stack, React for frontend, API Routes for backend). Styling: Tailwind CSS 3.4.1, PostCSS. Animation: Framer Motion. Database: Supabase (PostgreSQL). AI: OpenAI API (GPT models). Authentication: NextAuth.js (with PostgreSQL adapter). Payment Gateway: Razorpay. Error Tracking: Sentry. Data Fetching/Caching (Client-side): SWR. Deployment: Vercel (integrated with GitHub for CI/CD). Runtime: Node.js. Type Checking: TypeScript. Testing: Jest, TS-Jest. UI Libraries: Headless UI, Heroicons, React Icons. Charting: Recharts. Markdown Processing: gray-matter, remark, remark-html. Environment Variables: dotenv. Architecture: Modular component structure, domain-specific grouping, composition over inheritance. Backend uses Next.js API routes as serverless functions, with a lib/ directory for core business logic/services. Middleware for quota checks, rate limiting, and admin authentication.
 
+### Tailwind Plugins
+- DaisyUI integrated for future use.
+- Legacy Tailwind styles remain untouched.
+
 ## AI Directives
 - Delegation Rules: AI-related tasks are delegated to specific modules and API endpoints (e.g., lib/gptClient.ts, lib/memoryManager.ts, lib/botPersona.ts, pages/api/ai/). Coding Style: TypeScript for type safety, Tailwind CSS for utility-first styling, modular components, domain-specific grouping, custom React hooks for reusable logic, clear folder layout, linting enforced, and a desire for well-documented code.
 - Mode inheritance
